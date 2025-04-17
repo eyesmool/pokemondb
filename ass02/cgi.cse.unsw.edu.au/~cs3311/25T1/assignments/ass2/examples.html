@@ -1,0 +1,662 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>COMP3311 25T1 - Assignment 2</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+<link rel='stylesheet' type='text/css' href='https://www.cse.unsw.edu.au/~cs3311/25T1//course.css'>
+</head>
+<body>
+<div class="container"></head>
+<body>
+<div align='center'>
+<table width='100%' border='0'>
+<tr valign='top'>
+<td align='left' width='25%'>
+  <span class='tiny'><a href="https://www.cse.unsw.edu.au/~cs3311/25T1/">COMP3311 25T1</a></span>
+</td>
+<td align='center' width='50%'>
+  <span class='heading'>Assignment 2</span><br>
+  <span class='subheading'>Example Test Cases</span>
+</td>
+<td align='right' width='25%'>
+  <span class='tiny'><a href="https://www.cse.unsw.edu.au/~cs3311/25T1/">Database Systems</a></span>
+</td>
+</table>
+</div><div style="text-align:center;font-size:80%;color:#555555;margin-top:5px;">
+Last updated: <b>Tuesday 15th April 7:15pm</b> <br>
+Most recent changes are shown in <span class="red">red</span> ...
+older changes are shown in <span class="brown">brown</span>. <br>
+</div>
+<p style='text-align:center'>
+<a href='index.html'>[Assignment Spec]</a>&nbsp;&nbsp;
+<a href='schema.html'>[SQL Schema]</a>&nbsp;&nbsp;
+<a href='data.html'>[SQL Data]</a>&nbsp;&nbsp;
+<b>[Examples]</b>&nbsp;&nbsp;
+<a href='testing.php.html'>[Testing]</a>&nbsp;&nbsp;
+</p>
+
+
+<br />
+
+<h3>Introduction</h3>
+
+<p>
+    This document contains examples of output from the various scripts that you are required to develop.
+</p>
+
+<ol>
+    <li><a href="examples.html#Q1">Q1 Examples</a></li>
+    <li><a href="examples.html#Q2">Q2 Examples</a></li>
+    <li><a href="examples.html#Q3">Q3 Examples</a></li>
+    <li><a href="examples.html#Q4">Q4 Examples</a></li>
+    <li><a href="examples.html#Q5">Q5 Examples</a></li>
+</ol>
+
+<br />
+<hr />
+<br />
+
+<h3 align="center" id="Q1">Q1</h3>
+
+<pre>
+$ <b>python3 q1.py</b>
+GameName          #EggGroup #Pokemon
+Alpha Sapphire    14        261
+Black             14        177
+Black 2           15        352
+Blue              15        204
+Brilliant Diamond 14        177
+Crystal           15        316
+Diamond           14        177
+Emerald           14        251
+Fire Red          15        204
+Gold              15        316
+Heart Gold        15        321
+Leaf Green        15        204
+Legends: Arceus   14        302
+Let'S Go, Eevee   15        206
+Let'S Go, Pikachu 15        206
+Moon              15        370
+Omega Ruby        14        261
+Pearl             14        177
+Platinum          14        250
+Red               15        204
+Ruby              14        251
+Sapphire          14        251
+Scarlet           15        476
+Shield            15        469
+Shining Pearl     14        177
+Silver            15        316
+Soul Silver       15        321
+Sun               15        370
+Sword             15        469
+The Crown Tundra  14        247
+The Isle Of Armor 15        249
+Ultra Moon        15        484
+Ultra Sun         15        484
+Violet            15        476
+White             14        177
+White 2           15        352
+X                 15        555
+Y                 15        555
+Yellow            15        204
+</pre>
+
+
+<h3 align="center" id="Q2">Q2</h3>
+
+<pre>
+$ <b>python3 q2.py</b>
+TypeName     #Moves   #Pokemon
+Bug          34       19      
+Dark         53       45      
+Dragon       29       9       
+Electric     47       70      
+Fairy        33       2       
+Fighting     56       42      
+Fire         47       71      
+Flying       31       10      
+Ghost        34       24      
+Grass        59       100     
+Ground       31       21      
+Ice          33       29      
+Normal       200      127     
+Poison       35       25      
+Psychic      78       73      
+Rock         25       37      
+Steel        37       2       
+Water        53       134     
+</pre>
+
+
+<h3 align="center" id="Q3">Q3</h3>
+
+<pre>
+$ <b>python3 q3.py 'Bulbasaur'</b>
+MoveName         #Games #AvgLearntLevel
+Growl            34     3
+Growth           34     25
+Leech Seed       32     7
+Poison Powder    34     14
+Razor Leaf       34     19
+Sleep Powder     34     16
+Tackle           34     1
+Vine Whip        34     9
+
+$ <b>python3 q3.py 'Pidgey'</b>
+MoveName         #Games #AvgLearntLevel
+Agility          32     32
+Gust             32     8
+Mirror Move      30     43
+Quick Attack     32     13
+Sand Attack      32     5
+Whirlwind        32     18
+Wing Attack      32     30
+
+$ <b>python3 q3.py 'Alolan Raticate'</b>
+MoveName         #Games #AvgLearntLevel
+Hyper Fang       30     16
+Quick Attack     32     3
+Super Fang       32     35
+Tackle           32     1
+Tail Whip        32     1
+
+$ <b>python3 q3.py 'Alolan Vulpix'</b>
+MoveName         #Games #AvgLearntLevel
+Confuse Ray      34     18
+Roar             30     11
+Tail Whip        34     3
+
+$ <b>python3 q3.py 'Primeape'</b>
+MoveName         #Games #AvgLearntLevel
+Focus Energy     34     9
+Fury Swipes      34     11
+Karate Chop      30     12
+Leer             34     1
+Low Kick         32     4
+Scratch          34     1
+Screech          32     37
+Seismic Toss     34     22
+Thrash           34     48
+
+$ <b>python3 q3.py 'Aipom'</b>
+No moves learnable in at least 30 games found for Pokemon "Aipom"
+
+$ <b>python3 q3.py 'Joltik'</b>
+No moves learnable in at least 30 games found for Pokemon "Joltik"
+
+$ <b>python3 q3.py 'COMP3311'</b>
+Pokemon "COMP3311" not found
+</pre>
+
+<h3 align="center" id="Q4">Q4</h3>
+
+<pre>
+$ <b>python3 q4.py 'Goodra'</b>
+Goodra: The full evolution chain:
+Goomy
++ For "Hisuian Sliggoo", The evolution requirement is [Level: 40] AND [Region: Hisui]
+++ For "Hisuian Goodra", The evolution requirement is [Level: 50] AND [Weather: Rain] AND [Region: Hisui]
++ For "Sliggoo", The evolution requirement is [Level: 40] AND [Not Region: Hisui]
+++ For "Goodra", The evolution requirement is [Level: 50] AND [Weather: Rain]
+Hisuian Goodra: The full evolution chain:
+Goomy
++ For "Hisuian Sliggoo", The evolution requirement is [Level: 40] AND [Region: Hisui]
+++ For "Hisuian Goodra", The evolution requirement is [Level: 50] AND [Weather: Rain] AND [Region: Hisui]
++ For "Sliggoo", The evolution requirement is [Level: 40] AND [Not Region: Hisui]
+++ For "Goodra", The evolution requirement is [Level: 50] AND [Weather: Rain]
+
+$ <b>python3 q4.py 'pidg'</b>
+Mega Pidgeot: The full evolution chain:
+Mega Pidgeot
+- No Evolutions
+Pidgeot: The full evolution chain:
+Pidgey
++ For "Pidgeotto", The evolution requirement is [Level: 18]
+++ For "Pidgeot", The evolution requirement is [Level: 36]
+Pidgeotto: The full evolution chain:
+Pidgey
++ For "Pidgeotto", The evolution requirement is [Level: 18]
+++ For "Pidgeot", The evolution requirement is [Level: 36]
+Pidgey: The full evolution chain:
+Pidgey
++ For "Pidgeotto", The evolution requirement is [Level: 18]
+++ For "Pidgeot", The evolution requirement is [Level: 36]
+
+$ <b>python3 q4.py 'aa'</b>
+Flaaffy: The full evolution chain:
+Mareep
++ For "Flaaffy", The evolution requirement is [Level: 15]
+++ For "Ampharos", The evolution requirement is [Level: 30]
+
+$ <b>python3 q4.py 'pik'</b>
+Partner Pikachu: The full evolution chain:
+Partner Pikachu
+- No Evolutions
+Pikachu: The full evolution chain:
+Pichu
++ For "Pikachu", The evolution requirement is [High Friendship]
+++ For "Alolan Raichu", The evolution requirement is [Region: Alola] AND [Use Item: Thunder Stone]
+++ For "Raichu", The evolution requirement is [Not Region: Alola] AND [Use Item: Thunder Stone]
+Pikipek: The full evolution chain:
+Pikipek
++ For "Trumbeak", The evolution requirement is [Level: 14]
+++ For "Toucannon", The evolution requirement is [Level: 28]
+
+$ <b>python3 q4.py 'ish'</b>
+Arctovish: The full evolution chain:
+Arctovish
+- No Evolutions
+Bisharp: The full evolution chain:
+Pawniard
++ For "Bisharp", The evolution requirement is [Level: 52]
+++ For "Kingambit", The evolution requirement is [Hold Item: Leader'S Crest] AND [Battle: Bisharp 3X]
+Bruxish: The full evolution chain:
+Bruxish
+- No Evolutions
+Corphish: The full evolution chain:
+Corphish
++ For "Crawdaunt", The evolution requirement is [Level: 30]
+Dracovish: The full evolution chain:
+Dracovish
+- No Evolutions
+Frillish: The full evolution chain:
+Frillish
++ For "Jellicent", The evolution requirement is [Level: 40]
+Hisuian Qwilfish: The full evolution chain:
+Hisuian Qwilfish
+- No Evolutions
+Oddish: The full evolution chain:
+Oddish
++ For "Gloom", The evolution requirement is [Level: 21]
+++ For "Bellossom", The evolution requirement is [Use Item: Sun Stone]
+++ For "Vileplume", The evolution requirement is [Use Item: Leaf Stone]
+Qwilfish: The full evolution chain:
+Qwilfish
++ For "Overqwil", The evolution requirement is [Use Move: Barb Barrage 20X] AND [Move Style: Strong Style]
+Shroomish: The full evolution chain:
+Shroomish
++ For "Breloom", The evolution requirement is [Level: 23]
+Trubbish: The full evolution chain:
+Trubbish
++ For "Garbodor", The evolution requirement is [Level: 36]
+Vanillish: The full evolution chain:
+Vanillite
++ For "Vanillish", The evolution requirement is [Level: 35]
+++ For "Vanilluxe", The evolution requirement is [Level: 47]
+Wishiwashi - School Form: The full evolution chain:
+Wishiwashi - School Form
+- No Evolutions
+Wishiwashi - Solo Form: The full evolution chain:
+Wishiwashi - Solo Form
+- No Evolutions
+
+$ <b>python3 q4.py 'ee'</b>
+Bayleef: The full evolution chain:
+Chikorita
++ For "Bayleef", The evolution requirement is [Level: 16]
+++ For "Meganium", The evolution requirement is [Level: 32]
+Beedrill: The full evolution chain:
+Weedle
++ For "Kakuna", The evolution requirement is [Level: 7]
+++ For "Beedrill", The evolution requirement is [Level: 10]
+Beheeyem: The full evolution chain:
+Elgyem
++ For "Beheeyem", The evolution requirement is [Level: 42]
+Bounsweet: The full evolution chain:
+Bounsweet
++ For "Steenee", The evolution requirement is [Level: 18]
+++ For "Tsareena", The evolution requirement is [Know Move: Stomp]
+Butterfree: The full evolution chain:
+Caterpie
++ For "Metapod", The evolution requirement is [Level: 7]
+++ For "Butterfree", The evolution requirement is [Level: 10]
+Celesteela: The full evolution chain:
+Celesteela
+- No Evolutions
+Combee: The full evolution chain:
+Combee
++ For "Vespiquen", The evolution requirement is [Level: 21] AND [Gender: Female]
+Cottonee: The full evolution chain:
+Cottonee
++ For "Whimsicott", The evolution requirement is [Use Item: Sun Stone]
+Deerling: The full evolution chain:
+Deerling
++ For "Sawsbuck", The evolution requirement is [Level: 34]
+Deoxys - Speed Forme: The full evolution chain:
+Deoxys - Speed Forme
+- No Evolutions
+Dreepy: The full evolution chain:
+Dreepy
++ For "Drakloak", The evolution requirement is [Level: 50]
+++ For "Dragapult", The evolution requirement is [Level: 60]
+Drowzee: The full evolution chain:
+Drowzee
++ For "Hypno", The evolution requirement is [Level: 26]
+Dudunsparce - Three-Segment Form: The full evolution chain:
+Dunsparce
++ For "Dudunsparce - Three-Segment Form", The evolution requirement is [Rare] AND [Know Move: Hyper Drill]
++ For "Dudunsparce - Two-Segment Form", The evolution requirement is [Know Move: Hyper Drill]
+Eelektrik: The full evolution chain:
+Tynamo
++ For "Eelektrik", The evolution requirement is [Level: 39]
+++ For "Eelektross", The evolution requirement is [Use Item: Thunder Stone]
+Eelektross: The full evolution chain:
+Tynamo
++ For "Eelektrik", The evolution requirement is [Level: 39]
+++ For "Eelektross", The evolution requirement is [Use Item: Thunder Stone]
+Eevee: The full evolution chain:
+Eevee
++ For "Espeon", The evolution requirement is [High Friendship] AND [Time Of Day: Day]
++ For "Flareon", The evolution requirement is [Use Item: Fire Stone]
++ For "Glaceon", The evolution requirement is <span style="color:red">[Use Item: Ice Stone]</span>
++ For "Glaceon", The evolution requirement is <span style="color:red">[Area: Icy Rock]</span>
++ For "Jolteon", The evolution requirement is [Use Item: Thunder Stone]
++ For "Leafeon", The evolution requirement is <span style="color:red">[Use Item: Leaf Stone]</span>
++ For "Leafeon", The evolution requirement is <span style="color:red">[Area: Mossy Rock]</span>
++ For "Sylveon", The evolution requirement is [High Friendship] AND [Know Move Type: Fairy]
++ For "Umbreon", The evolution requirement is [High Friendship] AND [Time Of Day: Night]
++ For "Vaporeon", The evolution requirement is [Use Item: Water Stone]
+Feebas: The full evolution chain:
+Feebas
++ For "Milotic", The evolution requirement is [Trade] AND [Hold Item: Prism Scale]
++ For "Milotic", The evolution requirement is [High Beauty]
+Ferroseed: The full evolution chain:
+Ferroseed
++ For "Ferrothorn", The evolution requirement is [Level: 40]
+Galarian Weezing: The full evolution chain:
+Koffing
++ For "Galarian Weezing", The evolution requirement is [Level: 35] AND [Region: Galar]
++ For "Weezing", The evolution requirement is [Level: 35] AND [Not Region: Galar]
+Goldeen: The full evolution chain:
+Goldeen
++ For "Seaking", The evolution requirement is [Level: 33]
+Greedent: The full evolution chain:
+Skwovet
++ For "Greedent", The evolution requirement is [Level: 24]
+Hitmonlee: The full evolution chain:
+Tyrogue
++ For "Hitmonchan", The evolution requirement is [Level: 20] AND [Stat Condition: Attack < Defense]
++ For "Hitmonlee", The evolution requirement is [Level: 20] AND [Stat Condition: Attack > Defense]
++ For "Hitmontop", The evolution requirement is [Level: 20] AND [Stat Condition: Attack = Defense]
+Indeedee - Female: The full evolution chain:
+Indeedee - Female
+- No Evolutions
+Indeedee - Male: The full evolution chain:
+Indeedee - Male
+- No Evolutions
+Lileep: The full evolution chain:
+Lileep
++ For "Cradily", The evolution requirement is [Level: 40]
+Mareep: The full evolution chain:
+Mareep
++ For "Flaaffy", The evolution requirement is [Level: 15]
+++ For "Ampharos", The evolution requirement is [Level: 30]
+Maushold - Family Of Three: The full evolution chain:
+Tandemaus
++ For "Maushold - Family Of Four", The evolution requirement is [Level: 25]
++ For "Maushold - Family Of Three", The evolution requirement is [Level: 25] AND [Rare]
+Mega Beedrill: The full evolution chain:
+Mega Beedrill
+- No Evolutions
+Mega Steelix: The full evolution chain:
+Mega Steelix
+- No Evolutions
+Nidoqueen: The full evolution chain:
+Nidoran&#9792;
++ For "Nidorina", The evolution requirement is [Level: 16]
+++ For "Nidoqueen", The evolution requirement is [Use Item: Moon Stone]
++ For "Nidorino", The evolution requirement is [Level: 16]
+++ For "Nidoking", The evolution requirement is [Use Item: Moon Stone]
+Orbeetle: The full evolution chain:
+Blipbug
++ For "Dottler", The evolution requirement is [Level: 10]
+++ For "Orbeetle", The evolution requirement is [Level: 30]
+Partner Eevee: The full evolution chain:
+Partner Eevee
+- No Evolutions
+Registeel: The full evolution chain:
+Registeel
+- No Evolutions
+Ribombee: The full evolution chain:
+Cutiefly
++ For "Ribombee", The evolution requirement is [Level: 25]
+Rookidee: The full evolution chain:
+Rookidee
++ For "Corvisquire", The evolution requirement is [Level: 18]
+++ For "Corviknight", The evolution requirement is [Level: 38]
+Seedot: The full evolution chain:
+Seedot
++ For "Nuzleaf", The evolution requirement is [Level: 14]
+++ For "Shiftry", The evolution requirement is [Use Item: Leaf Stone]
+Seel: The full evolution chain:
+Seel
++ For "Dewgong", The evolution requirement is [Level: 34]
+Spritzee: The full evolution chain:
+Spritzee
++ For "Aromatisse", The evolution requirement is [Trade] AND [Hold Item: Sachet]
+Squawkabilly - Green Plumage: The full evolution chain:
+Squawkabilly - Green Plumage
+- No Evolutions
+Steelix: The full evolution chain:
+Onix
++ For "Steelix", The evolution requirement is [Trade] AND [Hold Item: Metal Coat]
+Steenee: The full evolution chain:
+Bounsweet
++ For "Steenee", The evolution requirement is [Level: 18]
+++ For "Tsareena", The evolution requirement is [Know Move: Stomp]
+Tauros - Aqua Breed: The full evolution chain:
+Tauros - Aqua Breed
+- No Evolutions
+Tauros - Blaze Breed: The full evolution chain:
+Tauros - Blaze Breed
+- No Evolutions
+Tauros - Combat Breed: The full evolution chain:
+Tauros - Combat Breed
+- No Evolutions
+Treecko: The full evolution chain:
+Treecko
++ For "Grovyle", The evolution requirement is [Level: 16]
+++ For "Sceptile", The evolution requirement is [Level: 36]
+Tsareena: The full evolution chain:
+Bounsweet
++ For "Steenee", The evolution requirement is [Level: 18]
+++ For "Tsareena", The evolution requirement is [Know Move: Stomp]
+Victreebel: The full evolution chain:
+Bellsprout
++ For "Weepinbell", The evolution requirement is [Level: 21]
+++ For "Victreebel", The evolution requirement is [Use Item: Leaf Stone]
+Weedle: The full evolution chain:
+Weedle
++ For "Kakuna", The evolution requirement is [Level: 7]
+++ For "Beedrill", The evolution requirement is [Level: 10]
+Weepinbell: The full evolution chain:
+Bellsprout
++ For "Weepinbell", The evolution requirement is [Level: 21]
+++ For "Victreebel", The evolution requirement is [Use Item: Leaf Stone]
+Weezing: The full evolution chain:
+Koffing
++ For "Galarian Weezing", The evolution requirement is [Level: 35] AND [Region: Galar]
++ For "Weezing", The evolution requirement is [Level: 35] AND [Not Region: Galar]
+Wyrdeer: The full evolution chain:
+Stantler
++ For "Wyrdeer", The evolution requirement is [Use Move: Psyshield Bash 20X] AND [Move Style: Agile Style]
+Xurkitree: The full evolution chain:
+Xurkitree
+- No Evolutions
+
+<span style="color:red">$ <b>python3 q4.py 'cYn'</b>
+Cyndaquil: The full evolution chain:
+Cyndaquil
++ For "Quilava", The evolution requirement is [Level: 14] AND [Not Region: Hisui]
+++ For "Hisuian Typhlosion", The evolution requirement is [Level: 36] AND [Region: Hisui]
+++ For "Typhlosion", The evolution requirement is [Level: 36] AND [Not Region: Hisui]
++ For "Quilava", The evolution requirement is [Level: 17] AND [Region: Hisui]
+++ For "Hisuian Typhlosion", The evolution requirement is [Level: 36] AND [Region: Hisui]
+++ For "Typhlosion", The evolution requirement is [Level: 36] AND [Not Region: Hisui]</span>
+
+$ <b>python3 q4.py 'COMP3311'</b>
+No such pokemon matching the name COMP3311
+</pre>
+
+<h3 align="center" id="Q5">Q5</h3>
+
+<pre>
+$ <b>python3 q5.py 'Use Item: Water Stone' ''</b>
+You can get the final pokemon Cloyster by evolving Shellder, 1 times!
+You can get the final pokemon Simipour by evolving Panpour, 1 times!
+You can get the final pokemon Starmie by evolving Staryu, 1 times!
+You can get the final pokemon Vaporeon by evolving Eevee, 1 times!
+
+$ <b>python3 q5.py 'Use Item: Water Stone' 'Water;^Psychic'</b>
+You can get the final pokemon Cloyster by evolving Shellder, 1 times!
+You can get the final pokemon Simipour by evolving Panpour, 1 times!
+
+$ <b>python3 q5.py 'Level: 30;Use Item: Dawn Stone;Gender: Male' 'Psychic'</b>
+You can get the final pokemon Gallade by evolving Ralts, 2 times!
+You can get the final pokemon Gardevoir by evolving Ralts, 2 times!
+You can get the final pokemon Hypno by evolving Drowzee, 1 times!
+You can get the final pokemon Jynx by evolving Smoochum, 1 times!
+You can get the final pokemon Meowstic - Male by evolving Espurr, 1 times!
+You can get the final pokemon Wobbuffet by evolving Wynaut, 1 times!
+You can get the final pokemon Xatu by evolving Natu, 1 times!
+
+$ <b>python3 q5.py 'Use Item: Leaf Stone;Area: Mossy Rock' ''</b>
+You can get the final pokemon Hisuian Electrode by evolving Hisuian Voltorb, 1 times!
+You can get the final pokemon Leafeon by evolving Eevee, 1 times!
+You can get the final pokemon Simisage by evolving Pansage, 1 times!
+
+$ <b>python3 q5.py 'Level: 36;Not Region: Hisui' '^Ice;^Fire;^Electric;Water;^Ground;^Poison;^Flying'</b>
+You can get the final pokemon Blastoise by evolving Squirtle, 2 times!
+You can get the final pokemon Empoleon by evolving Piplup, 2 times!
+You can get the final pokemon Feraligatr by evolving Totodile, 2 times!
+You can get the final pokemon Greninja by evolving Froakie, 2 times!
+You can get the final pokemon Inteleon by evolving Sobble, 2 times!
+You can get the final pokemon Primarina by evolving Popplio, 2 times!
+You can get the final pokemon Quaquaval by evolving Quaxly, 2 times!
+You can get the final pokemon Samurott by evolving Oshawott, 2 times!
+You can get the final pokemon Araquanid by evolving Dewpider, 1 times!
+You can get the final pokemon Barraskewda by evolving Arrokuda, 1 times!
+You can get the final pokemon Crawdaunt by evolving Corphish, 1 times!
+You can get the final pokemon Drednaw by evolving Chewtle, 1 times!
+You can get the final pokemon Floatzel by evolving Buizel, 1 times!
+You can get the final pokemon Golduck by evolving Psyduck, 1 times!
+You can get the final pokemon Golisopod by evolving Wimpod, 1 times!
+You can get the final pokemon Kingler by evolving Krabby, 1 times!
+You can get the final pokemon Lumineon by evolving Finneon, 1 times!
+You can get the final pokemon Octillery by evolving Remoraid, 1 times!
+You can get the final pokemon Seaking by evolving Goldeen, 1 times!
+You can get the final pokemon Sharpedo by evolving Carvanha, 1 times!
+You can get the final pokemon Wugtrio by evolving Wiglett, 1 times!
+
+$ <b>python3 q5.py 'Level: 40' 'Fairy;Ghost'</b>
+You can get the final pokemon Gardevoir by evolving Ralts, 2 times!
+You can get the final pokemon Tinkaton by evolving Tinkatink, 2 times!
+You can get the final pokemon Banette by evolving Shuppet, 1 times!
+You can get the final pokemon Cofagrigus by evolving Yamask, 1 times!
+You can get the final pokemon Dachsbun by evolving Fidough, 1 times!
+You can get the final pokemon Drifblim by evolving Drifloon, 1 times!
+You can get the final pokemon Granbull by evolving Snubbull, 1 times!
+You can get the final pokemon Jellicent by evolving Frillish, 1 times!
+You can get the final pokemon Ribombee by evolving Cutiefly, 1 times!
+You can get the final pokemon Shiinotic by evolving Morelull, 1 times!
+
+$ <b>python3 q5.py 'critical hit: 5x' ''</b>
+You can get the final pokemon Sirfetch'D by evolving Farfetch'D, 1 times!
+
+$ <b>python3 q5.py '' ''</b>
+No evolution chains match the requirements
+
+<span style="color:red">$ <b>python3 q5.py 'Level: 100' 'Normal;Flying'</b>
+You can get the final pokemon Corviknight by evolving Rookidee, 2 times!
+You can get the final pokemon Exploud by evolving Whismur, 2 times!
+You can get the final pokemon Jumpluff by evolving Hoppip, 2 times!
+You can get the final pokemon Pidgeot by evolving Pidgey, 2 times!
+You can get the final pokemon Slaking by evolving Slakoth, 2 times!
+You can get the final pokemon Staraptor by evolving Starly, 2 times!
+You can get the final pokemon Stoutland by evolving Lillipup, 2 times!
+You can get the final pokemon Talonflame by evolving Fletchling, 2 times!
+You can get the final pokemon Toucannon by evolving Pikipek, 2 times!
+You can get the final pokemon Unfezant by evolving Pidove, 2 times!
+You can get the final pokemon Altaria by evolving Swablu, 1 times!
+You can get the final pokemon Archeops by evolving Archen, 1 times!
+You can get the final pokemon Bewear by evolving Stufful, 1 times!
+You can get the final pokemon Bibarel by evolving Bidoof, 1 times!
+You can get the final pokemon Diggersby by evolving Bunnelby, 1 times!
+You can get the final pokemon Dodrio by evolving Doduo, 1 times!
+You can get the final pokemon Drifblim by evolving Drifloon, 1 times!
+You can get the final pokemon Dubwool by evolving Wooloo, 1 times!
+You can get the final pokemon Fearow by evolving Spearow, 1 times!
+You can get the final pokemon Furret by evolving Sentret, 1 times!
+You can get the final pokemon Greedent by evolving Skwovet, 1 times!
+You can get the final pokemon Kilowattrel by evolving Wattrel, 1 times!
+You can get the final pokemon Ledian by evolving Ledyba, 1 times!
+You can get the final pokemon Linoone by evolving Zigzagoon, 1 times!
+You can get the final pokemon Mandibuzz by evolving Vullaby, 1 times!
+You can get the final pokemon Maushold - Family Of Four by evolving Tandemaus, 1 times!
+You can get the final pokemon Noctowl by evolving Hoothoot, 1 times!
+You can get the final pokemon Noivern by evolving Noibat, 1 times!
+You can get the final pokemon Pelipper by evolving Wingull, 1 times!
+You can get the final pokemon Persian by evolving Meowth, 1 times!
+You can get the final pokemon Purugly by evolving Glameow, 1 times!
+You can get the final pokemon Raticate by evolving Rattata, 1 times!
+You can get the final pokemon Sawsbuck by evolving Deerling, 1 times!
+You can get the final pokemon Swanna by evolving Ducklett, 1 times!
+You can get the final pokemon Swellow by evolving Taillow, 1 times!
+You can get the final pokemon Watchog by evolving Patrat, 1 times!
+You can get the final pokemon Xatu by evolving Natu, 1 times!</span>
+
+<span style="color:red">$ <b>python3 q5.py 'Level: 100' '^Normal;^Water;^Fire;^Grass;^Electric;^Psychic;^Dark;^Ice;^Dragon'</b>>
+You can get the final pokemon Aggron by evolving Aron, 2 times!
+You can get the final pokemon Beedrill by evolving Weedle, 2 times!
+You can get the final pokemon Butterfree by evolving Caterpie, 2 times!
+You can get the final pokemon Corviknight by evolving Rookidee, 2 times!
+You can get the final pokemon Garganacl by evolving Nacli, 2 times!
+You can get the final pokemon Klinklang by evolving Klink, 2 times!
+You can get the final pokemon Scolipede by evolving Venipede, 2 times!
+You can get the final pokemon Tinkaton by evolving Tinkatink, 2 times!
+You can get the final pokemon Vivillon by evolving Scatterbug, 2 times!
+You can get the final pokemon Alolan Dugtrio by evolving Alolan Diglett, 1 times!
+You can get the final pokemon Arbok by evolving Ekans, 1 times!
+You can get the final pokemon Archeops by evolving Archen, 1 times!
+You can get the final pokemon Ariados by evolving Spinarak, 1 times!
+You can get the final pokemon Armaldo by evolving Anorith, 1 times!
+You can get the final pokemon Banette by evolving Shuppet, 1 times!
+You can get the final pokemon Bastiodon by evolving Shieldon, 1 times!
+You can get the final pokemon Clodsire by evolving Paldean Wooper, 1 times!
+You can get the final pokemon Cofagrigus by evolving Yamask, 1 times!
+You can get the final pokemon Copperajah by evolving Cufant, 1 times!
+You can get the final pokemon Crustle by evolving Dwebble, 1 times!
+You can get the final pokemon Dachsbun by evolving Fidough, 1 times!
+You can get the final pokemon Donphan by evolving Phanpy, 1 times!
+You can get the final pokemon Drifblim by evolving Drifloon, 1 times!
+You can get the final pokemon Dugtrio by evolving Diglett, 1 times!
+You can get the final pokemon Excadrill by evolving Drilbur, 1 times!
+You can get the final pokemon Forretress by evolving Pineco, 1 times!
+You can get the final pokemon Garbodor by evolving Trubbish, 1 times!
+You can get the final pokemon Glimmora by evolving Glimmet, 1 times!
+You can get the final pokemon Golurk by evolving Golett, 1 times!
+You can get the final pokemon Grafaiai by evolving Shroodle, 1 times!
+You can get the final pokemon Granbull by evolving Snubbull, 1 times!
+You can get the final pokemon Hariyama by evolving Makuhita, 1 times!
+You can get the final pokemon Hippowdon by evolving Hippopotas, 1 times!
+You can get the final pokemon Kricketune by evolving Kricketot, 1 times!
+You can get the final pokemon Ledian by evolving Ledyba, 1 times!
+You can get the final pokemon Mienshao by evolving Mienfoo, 1 times!
+You can get the final pokemon Mudsdale by evolving Mudbray, 1 times!
+You can get the final pokemon Muk by evolving Grimer, 1 times!
+You can get the final pokemon Ninjask by evolving Nincada, 1 times!
+You can get the final pokemon Palossand by evolving Sandygast, 1 times!
+You can get the final pokemon Perrserker by evolving Galarian Meowth, 1 times!
+You can get the final pokemon Rampardos by evolving Cranidos, 1 times!
+You can get the final pokemon Revavroom by evolving Varoom, 1 times!
+You can get the final pokemon Ribombee by evolving Cutiefly, 1 times!
+You can get the final pokemon Sandaconda by evolving Silicobra, 1 times!
+You can get the final pokemon Sandslash by evolving Sandshrew, 1 times!
+You can get the final pokemon Spidops by evolving Tarountula, 1 times!
+You can get the final pokemon Swalot by evolving Gulpin, 1 times!
+You can get the final pokemon Toxicroak by evolving Croagunk, 1 times!
+You can get the final pokemon Venomoth by evolving Venonat, 1 times!</span>
+</pre>
+</div></body>
+</html>

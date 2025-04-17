@@ -1,0 +1,507 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>COMP3311 25T1 - Assignment 2</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+<link rel='stylesheet' type='text/css' href='https://www.cse.unsw.edu.au/~cs3311/25T1//course.css'>
+</head>
+<body>
+<div class="container"></head>
+<body>
+<div align='center'>
+<table width='100%' border='0'>
+<tr valign='top'>
+<td align='left' width='25%'>
+  <span class='tiny'><a href="https://www.cse.unsw.edu.au/~cs3311/25T1/">COMP3311 25T1</a></span>
+</td>
+<td align='center' width='50%'>
+  <span class='heading'>Assignment 2</span><br>
+  <span class='subheading'>Python, PostgreSQL, psycopg2</span>
+</td>
+<td align='right' width='25%'>
+  <span class='tiny'><a href="https://www.cse.unsw.edu.au/~cs3311/25T1/">Database Systems</a></span>
+</td>
+</table>
+</div><div style="text-align:center;font-size:80%;color:#555555;margin-top:5px;">
+Last updated: <b>Tuesday 15th April 7:15pm</b> <br>
+Most recent changes are shown in <span class="red">red</span> ...
+older changes are shown in <span class="brown">brown</span>. <br>
+</div>
+<p style='text-align:center'>
+<b>[Assignment Spec]</b>&nbsp;&nbsp;
+<a href='schema.html'>[SQL Schema]</a>&nbsp;&nbsp;
+<a href='data.html'>[SQL Data]</a>&nbsp;&nbsp;
+<a href='examples.html'>[Examples]</a>&nbsp;&nbsp;
+<a href='testing.php.html'>[Testing]</a>&nbsp;&nbsp;
+</p>
+
+
+
+<h3>Aims</h3>
+<p>
+	This assignment aims to give you practice in
+</p>
+<ul>
+	<li> implementing Python scripts to extract and display data from a database
+	<li> [optionally (but recommended)] implementing SQL views and PLpgSQL functions to support the scripts
+	<li> [optionally (but recommended)] implementing a collection of Python functions to support the scripts
+</ul>
+<p>
+	You could complete this assignment with minimal use of SQL.
+	<br />
+	However, it is highly recommended that you use SQL for its intended purpose:
+	<br />
+	Use SQL queries, views, and functions to filter and manipulate the data
+	<br />
+	Use Python to format and display the data
+</p>
+
+<p>
+	The goal is to build some useful data access operations on the Pokemon database.
+</p>
+
+<h3>Summary</h3>
+
+<table border="0" cellpadding="10">
+	<tr valign="top">
+		<td><b>Marks</b>:</td>
+		<td>
+			This assignment contributes <b>15 marks</b> toward your total mark for this course.
+		</td>
+	</tr>
+	<tr valign="top">
+		<td><b>Submission</b>:</td>
+		<td>
+			via WebCMS3 or <tt>give</tt>, submit the files <br>
+			<tt>q1.py</tt>, <tt>q2.py</tt>, <tt>q3.py</tt>, <tt>q4.py</tt>, <tt>q5.py</tt>, <tt>helpers.py</tt>, <tt>helpers.sql</tt>
+		</td>
+	</tr>
+	<tr>
+		<td><b>Deadline</b>:</td>
+		<td style="color:brown">Thursday 24 April 2025 @ 23:59:59</td>
+	</tr>
+	<tr>
+		<td><b>Late Penalty</b>:</td>
+		<td>
+			0.2 percent off the raw mark for each hour late, for 5 days
+			<br>
+ 			Any submission after 5 days will receive 0 marks
+			<br>
+			This is the UNSW standard late penalty.
+		</td>
+	</tr>
+</table>
+
+<h4>How to do this assignment:</h4>
+
+<ul>
+	<li> read this specification <b>carefully and completely</b>
+	<li> familiarise yourself with the <a href="schema.html">database schema</a>
+	<li> create a directory for this assignment
+	<li> copy the supplied files into this directory
+	<li> log in to vxdb02 and run your PostgreSQL server
+	<li> create a database <tt>pkmon</tt> on the <tt>vxdb02</tt>
+	<li> load the provided SQL dump file into the database
+	<li> explore the database
+	<li> complete the tasks below by editing q1.py, q2.py, q3.py, q4.py, q5.py
+	<li> test your work on vxdb02
+	<li> submit your python scripts via WebCMS or give <small>(you can submit multiple times, only your last submission will be marked)</small>
+</ul>
+
+<p>
+	And, of course, if you have PostgreSQL installed on your home machine,
+	you can do all of your development there.
+	<br />
+	But don't forget to test it on <tt>vxdb02</tt> before submitting.
+</p>
+
+<ul>
+	<li> <tt>helpers.sql</tt> ... any views or PLpgSQL functions to assist your Python </li>
+	<li> <tt>helpers.py</tt> ... any Python function to share between scripts </li>
+	<li> <tt>q1.py</tt> ... </li>
+	<li> <tt>q2.py</tt> ... </li>
+	<li> <tt>q3.py</tt> ... </li>
+	<li> <tt>q4.py</tt> ... </li>
+	<li> <tt>q5.py</tt> ... </li>
+</ul>
+
+<p>
+	There are even some functions given in <tt>helpers.sql</tt> and <tt>helpers.py</tt>. Freebie!
+</p>
+
+<h3>Background</h3>
+<p>
+    Pokemon is a Japanese media franchise managed by The Pokemon Company,
+    founded by Nintendo, Game Freak, and Creatures.
+    <br />
+    The franchise was created by Satoshi Tajiri in 1996,
+    and is centered around fictional creatures called "Pokemon".
+    <br />
+    <small>~ Wikipedia</small>
+</p>
+<p>
+    Specifically for this assignment, we are interested in the Pokemon video games.
+</p>
+<blockquote >
+    The Pokemon games are basically just databases
+    with each game updating the User Interface.
+    <br />
+    <small>~ Dylan Brotherston (describing this assignment to JAS), 2020</small>
+</blockquote>
+<p>
+    Pokemon have a lot of information associated with them.
+    <br />
+    And many relationships between different game elements.
+</p>
+<p>
+    Websites like
+    <a href="https://bulbapedia.bulbagarden.net/wiki/Main_Page">Bulbapedia</a>,
+    <a href="https://pokemondb.net/">The Pokemon Database</a>,
+    <a href="https://www.serebii.net/pokemon/">Serebii</a>,
+    and even the official
+    <a href="https://www.pokemon.com/us/pokedex">Pokemon website</a>
+    have searchable databases of Pokemon, moves, abilities, locations, and much more.
+</p>
+<p>
+    For this assignment (with a lot of python scripts and web scraping),
+    we have set up a PostgreSQL database
+    containing information about (almost) all 1008 Pokemon from all 9 generations,
+    as well as all moves, abilities, and locations.
+</p>
+<p>
+	The Pokemon database for this assignment is not a database for a
+	specific Pokemon game. Rather, it contains a large amount of
+	general information about Pokemon capabilities.
+	If this database was combined with tables to hold the game state,
+	then it would form a basis to run a specific Pokemon game.
+	There is much more detail on what is in the database and what all the
+	tables represent, in the "Database Design" page.
+</p>
+
+<h3>Setting Up</h3>
+
+<p>
+  In addition to the database dump file, available on the <a href="data.html"><tt>SQL Data</tt></a> page,
+  you are also provided a template Python files, and Python and SQL helper files.
+</p>
+
+<p>
+	The "template files" aim to save you some time in writing Python code.
+	E.g. they do handle the command-line arguments and let you focus on the
+	database interaction.
+</p>
+<p>
+	The <tt>helpers.py</tt> and <tt>helpers.sql</tt> files are provided in case you want to define
+	Python functions or PLpgSQL functions that might be useful in several of your scripts.
+	You are not required to use them (i.e. you can leave them unchanged).
+</p>
+<p>
+	The template files are available in a single
+	<a href="files/files.zip" download="ass2.files.zip">ZIP</a>
+	or
+	<a href="files/files.tar" download="ass2.files.tar">TAR</a>
+	file, which contains the following:
+</p>
+
+<p>
+	or copy them to your CSE account with the following command:
+</p>
+<pre>$ cp /web/cs3311/current/assignments/ass2/files/* .</pre>
+
+<br>
+<h3>Style</h3>
+<p>
+	2 marks for the assignment will be based on the style of your code.
+</p>
+<p>
+	Similarly to the previous assignment, the main things to look out for are:
+	<ul>
+		<li> readability </li>
+		<li> consistency </li>
+	</ul>
+	above matching any specific style guide.
+</p>
+<p>
+	But in saying that, Python has an official style guide <a href="https://peps.python.org/pep-0008/">PEP 8</a>
+	that we recommend you follow (again not explicitly required, just a suggestion).
+</p>
+<p>
+	Python also has tools like
+	<a href="https://pypi.org/project/black/">black</a>,
+	<a href="https://pypi.org/project/autopep8/">autopep8</a>,
+	<a href="https://pypi.org/project/pylint/">pylint</a>,
+	that can identify and fix many of the common style issues.
+</p>
+
+<h3>Script Design</h3>
+<p>
+	Python scripts should be designed with the following principles in mind:
+</p>
+<ul>
+	<li> Use SQL to extract data in a form that is easy to process
+	<li> Use Python to take the data, format it, and produce output
+</ul>
+<p>
+	In other words Data queries, filtering, grouping, sorting, etc should be done in SQL
+	<br />
+	while data formatting, conditions, error checking, etc should be done in Python.
+</p>
+<p>
+	You <b>should not</b> be pulling 1000s of rows from the database and then filtering them in Python
+	<br />
+	or matching foreign key values between separate queries in Python.
+</p>
+<p>
+	Such practices typically lead to inefficient code.
+	<br />
+	Python scripts that take longer than 2 seconds to execute will be penalised.
+	<br />
+	Python scripts that take longer than 5 will be killed and receive a mark of 0.
+	<br />
+	Your Python scripts shouldn't need more than half a second in the worst case.
+</p>
+<p>
+	And, of course, you should follow the normal abstraction practices
+	you have learned in earlier programming courses, e.g. repeated
+	sections of code should be placed in functions, etc.
+</p>
+
+<h3>Exercises</h3>
+
+<!--
+	====================================================================================================
+-->
+
+<h4 align="center">Q1 <small>(1 Marks)</small></h4>
+<p>
+    In the file <tt>q1.py</tt> write a script that takes 0 command line arguments,
+    and prints information about the number of distinct egg groups and the number of distinct Pokemon for each game.
+</p>
+<p>
+    Display each game on a separate line, using the following formatting:
+</p>
+<pre>
+f"{GameName:&lt;17} {#EggGroup:&lt;9} {#Pokemon:&lt;8}"
+</pre>
+<p>
+    Add a heading at the start of the output in the following formatting:
+</p>
+<pre>
+GameName          #EggGroup #Pokemon
+</pre>
+<p>
+    The output should be ordered by GameName in lexicographical order.
+</p>
+
+<!--
+	====================================================================================================
+-->
+
+<h4 align="center">Q2 <small>(2 Marks)</small></h4>
+<p>
+    In the file <tt>q2.py</tt>, write a script that takes 0 command-line arguments,
+    and prints information about the number of distinct moves of each type and the number of distinct Pokemon  
+    (whose first type matches the given type) that can learn more than 10 moves of that type.
+</p>
+<p>
+    Display each type on a separate line, using the following formatting:
+</p>
+<pre>
+f"{TypeName:&lt;12} {#Moves:&lt;8} {#Pokemon:&lt;8}"
+</pre>
+<p>
+    Add a heading at the start of the output in the following formatting:
+</p>
+<pre>
+TypeName     #Moves   #Pokemon
+</pre>
+<p>
+    The output should be ordered by TypeName in lexicographical order.
+</p>
+
+<!--
+	====================================================================================================
+-->
+
+<h4 align="center">Q3 <small>(2 Marks)</small></h4>
+<p>
+    In the file <tt>q3.py</tt>, write a script that takes 1 command-line argument:  
+</p>
+<ol>
+	<li>The name of a Pokemon <span style="color:brown">(exact match, case-sensitive).</span> </li>
+</ol>
+<p>
+    The script should identify all distinct moves that the given Pokemon can learn by level-up in at least 30 different games.
+	For each move, print the move name, the number of games in which the move is learnable, and the average level at which the move is learned.
+</p>
+<p>
+    Your output should include the following:
+</p>
+<ol>
+	<li>Move Name</li>
+	<li>Number of Games</li>
+	<li>Average Learnt Level (rounded to the nearest integer)</li>
+</ol>
+<p>
+    Display each move on a separate line, using the following formatting:
+</p>
+<pre>
+f"{MoveName:&lt;16} {#Games:&lt;6} {AvgLearntLevel:&lt;16}"
+</pre>
+<p>
+    Add a heading at the start of the output in the following formatting:
+</p>
+<pre>
+MoveName         #Games #AvgLearntLevel
+</pre>
+<p>
+	The output should be ordered by MoveName in lexicographical order.
+</p>
+<p>
+	If the input Pokemon does not exist, print an error message as shown on the examples page, and exit.
+</p>
+<p style="color:brown">
+	You can assume that levels are between 1-100 inclusive, and that the level requirement IDs are sequential, but you can not assume that the requirement id
+	will always correspond to the level number.
+</p>
+<!--
+	====================================================================================================
+-->
+
+<h4 align="center">Q4 <small>(3 Marks)</small></h4>
+
+<p>
+    In the file <tt>q4.py</tt>, write a script that takes 1 command-line argument:  
+</p>
+<ol>
+    <li>The string that the Pokemon name needs to contain.</li>
+</ol>
+<p>
+    The script should output the <strong>full evolution chain</strong> for each Pokemon whose name contains the input string.
+</p>
+<p>
+    The evolution chain is defined as follows:
+</p>
+<ol>
+    <li><b>Pre-Evolutions:</b> All Pokemon that can reach the given Pokemon through one or more evolutionary steps.</li>
+    <li><b>Post-Evolutions:</b> All Pokemon reachable by evolving the given Pokemon (or any intermediate evolution) through one or more evolution steps.</li>
+</ol>
+<p>
+    For each queried Pokemon (i.e., the Pokemon whose name contains the input string), the output format should be as follows:
+</p>
+<ul>
+    <li>The first line should display the queried Pokemon's name, followed by a colon and the text "The full evolution chain:".</li>
+    <li>Then, for each branch of the evolution chain, display the base (leaf) Pokemon (i.e. those with no pre-evolutions) 's <span style="color:red">name.</span></li>
+    <li>For each branch of the evolution chain:</li>
+	<ol>
+		<li>Print name of the base Pokemon (i.e., the one wit no pre-evolution).</li>
+		<li>For each evolution step in the chain, print an indented line using a fixed symbol (a '+' per depth level) to indicate hierarchy. The format should be:
+			<pre style="color:brown">&lt;Indentation&gt; For "&lt;PostEvolutionName&gt;", The evolution requirement is [&lt;Req1&gt;] AND [&lt;Req2&gt;] AND ...</pre>
+		</li>
+		<li>Each evolution step may have multiple evolution requirements. These requirements should be aggregated from the requirements table.</li>
+		<ul>
+			<li>If an evolution requirement is inverted (i.e., <tt>inverted = true</tt>), prefix its assertion with "Not ".</li>
+			<li>The aggregated requirements for a single evolution step should be displayed as a list connected by " AND "<span style="color:red">, and ordered by requirement ID</span>.</li>
+		</ul>
+	</ol>
+</ul>
+<p>
+    The output should be ordered by Pokemon name in lexicographical order. When multiple candidates (base Pokemon or post-evolved Pokemon) exist, also follow lexicographical order.
+</p>
+<p>
+    <span style="color:red">
+	If a Pokemon to Pokemon evolution has multiple evolution methods, print all methods
+	and order the evolution methods by evolution ID.
+	</span>
+	</p>
+<p>
+    If there is no Pokemon name containing the input string, print an error message as shown on the examples page, and exit.
+</p>
+
+<!--
+	====================================================================================================
+-->
+
+<h4 align="center">Q5 <small>(5 Marks)</small></h4>
+<p>
+    In the file <tt>q5.py</tt> write a script that takes 2 command line arguments.
+</p>
+<p>
+	For each basic Pokemon (Pokemon that can not be evolved into) that has at least one evolution, print out their final stage evolution(s) (Pokemon
+	that can not evolve into another), if all intermediate evolutions fulfill the conditions set out by the command-line arguments:
+</p>
+	 
+<ol>
+    <li>
+		Requirements List: A semicolon-separated list of evolution requirements (e.g., "High Friendship;Level: 100;Hold Item: Ghost Memory"). All requirements of an evolution chain
+		have to be a subset of this list for the chain be included in your result.
+	</li>
+	<ul>
+		<li>
+			For any requirement containing a numeric value (e.g., "Level: 100"), 
+			only consider those records from the requirements table where the numeric value extracted from the
+			assertion is <strong>less than or equal to</strong> the provided value. You can assume a requirement
+			can have only one number maximum, but you can not assume that the requirement in this list is directly
+			in the database. e.g. 'Critical Hit: 100X', whilst not in the database, will fulfill 'Critical Hit: 3X'.
+		</li>
+		<li>
+			Inverted requirements will start with 'Not ', e.g. 'Not Region: Hisui'.
+		</li>
+		<li>
+			Requirements should be matched in a case-insensitive manner.
+		</li>
+		<li><span style="color: brown">If this list is empty, there are no type restrictions at all.</span></li>
+	</ul>
+	<li>
+		Type List: A semicolon-separated list of Pokemon types (e.g., "Water;^Electric")
+		<ul>
+			<li>
+				Types without a leading caret (^) indicate possible types that must be present in all stages of evolution (either as the Pokemon's first or second type).
+				So if there are two or more types, such as "Water;Fire", it will match evolution chains where all Pokemon involved are Water type, or all Pokemon involved are Fire type.
+			</li>
+			<li>
+				Types prefixed with ^ indicate types that must not be present in any stage of the evolution process.
+			</li>
+			<li>
+				Requirements should be matched in a case-insensitive manner.
+			</li>	
+		</ul>
+</ol>
+	<ul>
+		<li>
+			For example, if the Requirement List is "High Friendship;Level: 100;Hold Item: Ghost Memory", a Pokemon evolution chain that requires a level of 40 and "High Friendship" is valid, as long as the remaining requirements are a subset of the provided argument list.
+		</li>
+		<li>
+			For example, if the Type List is "Water;Fire;^Electric", an evolution chain the type "Water" or "Fire" is valid, as long as if none of the Pokemon in the chain has the type "Electric". A Pokemon with the type "Electric" would not be valid, even if it also has "Water" or "Fire".
+		</li>
+    
+	</ul>
+    
+	
+	<p>
+		The output should be printed in the following format, ordered by evolution depth, then final stage Pokemon, then basic Pokemon and Pokemon name: 
+	</p>
+	<pre> You can get the final <span style="color:red">p</span>okemon &lt;final_pokemon_name&gt; by evolving &lt;basic_pokemon_name&gt; &lt;n&gt; times!</pre>
+	<p>
+		In this format, &lt;n&gt; represents the number of evolution steps (depth), and &lt;final_pokemon_name&gt; is the name of the Pokemon at the end of the evolution chain. 
+	</p>
+	<p>
+		If there is no valid evolution chain, print an error message as shown on the examples page, and exit.
+	</p> 
+
+	<p>
+		For Pokemon evolutions with multiple evolution methods, deal with each evolution method's requirements separately, but only print the (basic Pokemon, final Pokemon) pair once.
+	</p>
+<!--
+	====================================================================================================
+-->
+
+<h3>Examples</h3>
+
+<p>
+	Examples of using these scripts can be found on the
+	<a href="examples.html">Examples</a> page.
+</p>
+
+</div></body>
+</html>

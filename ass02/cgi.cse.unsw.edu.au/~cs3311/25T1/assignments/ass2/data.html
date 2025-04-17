@@ -1,0 +1,124 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>COMP3311 25T1 - Assignment 2</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+<link rel='stylesheet' type='text/css' href='https://www.cse.unsw.edu.au/~cs3311/25T1//course.css'>
+</head>
+<body>
+<div class="container"></head>
+<body>
+<div align='center'>
+<table width='100%' border='0'>
+<tr valign='top'>
+<td align='left' width='25%'>
+  <span class='tiny'><a href="https://www.cse.unsw.edu.au/~cs3311/25T1/">COMP3311 25T1</a></span>
+</td>
+<td align='center' width='50%'>
+  <span class='heading'>Assignment 2</span><br>
+  <span class='subheading'>SQL Data</span>
+</td>
+<td align='right' width='25%'>
+  <span class='tiny'><a href="https://www.cse.unsw.edu.au/~cs3311/25T1/">Database Systems</a></span>
+</td>
+</table>
+</div><div style="text-align:center;font-size:80%;color:#555555;margin-top:5px;">
+Last updated: <b>Friday 28th March 10:00pm</b> <br>
+Most recent changes are shown in <span class="red">red</span> ...
+older changes are shown in <span class="brown">brown</span>. <br>
+</div>
+<p style='text-align:center'>
+<a href='index.html'>[Assignment Spec]</a>&nbsp;&nbsp;
+<a href='schema.html'>[SQL Schema]</a>&nbsp;&nbsp;
+<b>[SQL Data]</b>&nbsp;&nbsp;
+<a href='examples.html'>[Examples]&nbsp;&nbsp;
+<a href='testing.php.html'>[Testing]</a>&nbsp;&nbsp;
+</p>
+
+
+<p>
+    The provided Dump File contains the pkmon schema and data.
+    <br/>
+    So you do not need to load the Schema File into the database before loading the Dump File.
+</p>
+
+<h3>SQL Dump File</h3>
+<ul>
+    <li><a href="database/pkmon.dump.sql.gz" download>Download Dump File</a>
+</ul>
+
+<h3>Copy the SQL Dump File</h3>
+<p style="color: red">
+	We do not recommend that you copy the dump file to your own directory for this assignment.
+	<br />
+	The dump file is over 22MB in size and will take up a sizable amount of your disk quota.
+	<br />
+	For easy access to the dump file you may create a symbolic link to the dump file in the assignment directory.
+	<br />
+</p>
+<p>
+    Download above or create a link to the SQL Dump File by running the command below.
+    <pre>$ ln -s /web/cs3311/current/assignments/ass2/database/pkmon.dump.sql .</pre>
+</p>
+
+<h3>Loading the SQL Dump File</h3>
+<p>
+    To load the SQL Dump File into the database, run the commands below.
+</p>
+<pre>
+# Only run this first command if you downloaded the .gz file to your local machine
+# If you used the `ln -s` command, then you can skip this command
+$ gunzip pkmon.dump.sql.gz
+
+# Remove an old database if it exists
+# WARNING: This will delete all Views and Functions loaded into the database
+$ dropdb --if-exists pkmon
+
+# Create a new database
+$ createdb pkmon
+
+# Load the SQL Dump File into the database
+$ psql pkmon -f pkmon.dump.sql
+... lots of output (SET, CREATE, ALTER, ...)
+
+# You can now access the database, run queries, create views, etc.
+$ psql pkmon
+</pre>
+
+<h3>Database Summary</h3>
+<p>
+    We have provided a function pre-defined in the database called <code>dbpop</code> than can be used to get a summary of the database.
+    <br/>
+    To make sure your database is loaded correctly, try run the commands below.
+</p>
+<pre>
+# Access the database
+$ psql pkmon
+
+# Run the `dbpop` function
+pkmon=# SELECT * FROM dbpop();
+       tablename        | ntuples
+------------------------+---------
+ abilities              |     297
+ egg_groups             |      15
+ encounter_requirements |   44492
+ encounters             |   40280
+ evolution_requirements |     650
+ evolutions             |     535
+ games                  |      39
+ in_group               |    1494
+ knowable_abilities     |    2696
+ learnable_moves        | 1262002
+ locations              |    3542
+ moves                  |     915
+ pokedex                |   11819
+ pokemon                |    1191
+ requirements           |     830
+ type_effectiveness     |     120
+ types                  |      18
+(17 rows)
+</pre>
+
+
+</div></body>
+</html>

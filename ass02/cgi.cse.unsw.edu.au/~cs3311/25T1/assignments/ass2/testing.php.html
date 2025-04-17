@@ -1,0 +1,239 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>COMP3311 25T1 - Assignment 2</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+<link rel='stylesheet' type='text/css' href='https://www.cse.unsw.edu.au/~cs3311/25T1//course.css'>
+</head>
+<body>
+<div class="container"></head>
+<body>
+<div align='center'>
+<table width='100%' border='0'>
+<tr valign='top'>
+<td align='left' width='25%'>
+  <span class='tiny'><a href="https://www.cse.unsw.edu.au/~cs3311/25T1/">COMP3311 25T1</a></span>
+</td>
+<td align='center' width='50%'>
+  <span class='heading'>Assignment 2</span><br>
+  <span class='subheading'>Testing Script</span>
+</td>
+<td align='right' width='25%'>
+  <span class='tiny'><a href="https://www.cse.unsw.edu.au/~cs3311/25T1/">Database Systems</a></span>
+</td>
+</table>
+</div><div style="text-align:center;font-size:80%;color:#555555;margin-top:5px;">
+Last updated: <b>Tuesday 15th April 1:50pm</b> <br>
+Most recent changes are shown in <span class="red">red</span> ...
+older changes are shown in <span class="brown">brown</span>. <br>
+</div><p style='text-align:center'><a href='index.html'>[Assignment Spec]</a>&nbsp;&nbsp;<a href='schema.html'>[SQL Schema]</a>&nbsp;&nbsp;<a href='data.html'>[SQL Data]</a>&nbsp;&nbsp;<a href='examples.html'>[Examples]</a>&nbsp;&nbsp;<b>[Testing]</b></p>
+
+
+<br>
+
+<p>
+    In order to test your assignment, you need to set up the following pre-conditions:
+</p>
+<ul>
+<li> you are logged in to <tt>vxdb02</tt>
+<li> your postgreSQL server is running (<tt>source /localstorage/$USER/env; p1</tt>)
+<li> you are in the directory containing your <tt>q1.py</tt>, etc. file
+</ul>
+<p><b>
+    Note that your <tt>helpers.sql</tt> file must be able to load into the database without errors.
+</b></p>
+<p>
+    You then run the command:
+</p>
+<pre>
+$ <b>3311 autotest ass2</b>
+</pre>
+<p>
+    And if you're lucky, you see output something like this:
+</p>
+
+<pre>$ <b>3311 autotest ass2</b>
+python3 -B -m py_compile *.py # q1.py
+./sql_create schema.sql helpers.sql TRUE # q1.py
+
+--- Loading Database Dump ---
+CREATE DOMAIN
+CREATE DOMAIN
+CREATE DOMAIN
+CREATE DOMAIN
+CREATE DOMAIN
+CREATE DOMAIN
+CREATE DOMAIN
+CREATE TYPE
+CREATE DOMAIN
+CREATE TYPE
+CREATE DOMAIN
+CREATE TYPE
+CREATE DOMAIN
+CREATE DOMAIN
+CREATE TYPE
+CREATE TYPE
+CREATE TYPE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+GRANT
+GRANT
+GRANT
+REVOKE
+REVOKE
+
+--- Loading Student Submission ---
+[cut] output from loading helpers.sql [/cut]
+
+./sql_clean # q1.py
+dos2unix: converting file helpers.py to Unix format...
+dos2unix: converting file q1.py to Unix format...
+dos2unix: converting file q2.py to Unix format...
+dos2unix: converting file q3.py to Unix format...
+dos2unix: converting file q4.py to Unix format...
+dos2unix: converting file q5.py to Unix format...
+Test Q0_Create_Database (Load the database with the dump file (should always succeed)) - passed
+Test Q1_A ('python3 q1.py') - passed
+Test Q2_A ('python3 q2.py') - passed
+Test Q3_A ('python3 q3.py Bulbasaur') - passed
+Test Q3_B ('python3 q3.py Pidgey') - passed
+Test Q3_C ("python3 q3.py 'Alolan Raticate'") - passed
+Test Q3_D ("python3 q3.py 'Alolan Vulpix'") - passed
+Test Q3_E ('python3 q3.py Primeape') - passed
+Test Q3_F ('python3 q3.py Aipom') - passed
+Test Q3_G ('python3 q3.py Joltik') - passed
+Test Q3_H ('python3 q3.py Rapidash') - passed
+Test Q3_I ("python3 q3.py 'Paldean Wooper'") - passed
+Test Q3_J ('python3 q3.py Dragapult') - passed
+Test Q3_K ('python3 q3.py Tauros') - passed
+Test Q3_L ('python3 q3.py COMP3311') - passed
+Test Q4_A ('python3 q4.py Goodra') - passed
+Test Q4_B ('python3 q4.py pidg') - passed
+Test Q4_C ('python3 q4.py aa') - passed
+Test Q4_D ('python3 q4.py pik') - passed
+Test Q4_E ('python3 q4.py ish') - passed
+Test Q4_F ('python3 q4.py ee') - passed
+Test Q4_G ('python3 q4.py cYn') - passed
+Test Q4_H ('python3 q4.py ort') - passed
+Test Q4_I ('python3 q4.py OOK') - passed
+Test Q4_J ('python3 q4.py fu') - passed
+Test Q4_K ('python3 q4.py Ll') - passed
+Test Q4_L ('python3 q4.py COMP3311') - passed
+Test Q5_A ("python3 q5.py 'Use Item: Water Stone' ''") - passed
+Test Q5_B ("python3 q5.py 'Use Item: Water Stone' 'Water;^Psychic'") - passed
+Test Q5_C ("python3 q5.py 'Level: 30;Use Item: Dawn Stone;Gender: Male' 'Psychic'") - passed
+Test Q5_D ("python3 q5.py 'Use Item: Leaf Stone;Area: Mossy Rock' ''") - passed
+Test Q5_E ("python3 q5.py 'Level: 36;Not Region: Hisui' '^Ice;^Fire;^Electric;Water;^Ground;^Poison;^Flying'") - passed
+Test Q5_F ("python3 q5.py 'Level: 40' 'Fairy;Ghost'") - passed
+Test Q5_G ("python3 q5.py 'Critical Hit: 5x' ''") - passed
+Test Q5_H ("python3 q5.py 'Level: 100' 'Normal;Flying'") - passed
+Test Q5_I ("python3 q5.py 'Level: 100' '^Normal;^Water;^Fire;^Grass;^Electric;^Psychic;^Dark;^Ice;^Dragon'") - passed
+Test Q5_J ("python3 q5.py '' ''") - passed
+Test Q0_Remove_Database (Remove the database (should always succeed)) - passed
+38 tests passed 0 tests failed
+</pre>
+
+<p>
+  The expected output from each test can be fond on the <a href="examples.html">examples</a> page
+<p>
+  You can also test individual views/functions by e.g.
+</p>
+
+<p><b>
+    Note that the <em>"Q0"</em> is always required, as it is not really a question but tells autotest to load the data dump file.
+</b></p>
+
+<pre>$ <b>3311 autotest ass2 Q0 Q5</b>
+python3 -B -m py_compile *.py # q1.py
+./sql_create schema.sql helpers.sql TRUE # q1.py
+
+--- Loading Database Dump ---
+CREATE DOMAIN
+CREATE DOMAIN
+CREATE DOMAIN
+CREATE DOMAIN
+CREATE DOMAIN
+CREATE DOMAIN
+CREATE DOMAIN
+CREATE TYPE
+CREATE DOMAIN
+CREATE TYPE
+CREATE DOMAIN
+CREATE TYPE
+CREATE DOMAIN
+CREATE DOMAIN
+CREATE TYPE
+CREATE TYPE
+CREATE TYPE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+GRANT
+GRANT
+GRANT
+REVOKE
+REVOKE
+
+--- Loading Student Submission ---
+[cut] output from loading helpers.sql [/cut]
+
+./sql_clean # q1.py
+dos2unix: converting file helpers.py to Unix format...
+dos2unix: converting file q1.py to Unix format...
+dos2unix: converting file q2.py to Unix format...
+dos2unix: converting file q3.py to Unix format...
+dos2unix: converting file q4.py to Unix format...
+dos2unix: converting file q5.py to Unix format...
+Test Q0_Create_Database (Load the database with the dump file (should always succeed)) - passed
+Test Q5_A ("python3 q5.py 'Use Item: Water Stone' ''") - passed
+Test Q5_B ("python3 q5.py 'Use Item: Water Stone' 'Water;^Psychic'") - passed
+Test Q5_C ("python3 q5.py 'Level: 30;Use Item: Dawn Stone;Gender: Male' 'Psychic'") - passed
+Test Q5_D ("python3 q5.py 'Use Item: Leaf Stone;Area: Mossy Rock' ''") - passed
+Test Q5_E ("python3 q5.py 'Level: 36;Not Region: Hisui' '^Ice;^Fire;^Electric;Water;^Ground;^Poison;^Flying'") - passed
+Test Q5_F ("python3 q5.py 'Level: 40' 'Fairy;Ghost'") - passed
+Test Q5_G ("python3 q5.py 'Critical Hit: 5x' ''") - passed
+Test Q5_H ("python3 q5.py 'Level: 100' 'Normal;Flying'") - passed
+Test Q5_I ("python3 q5.py 'Level: 100' '^Normal;^Water;^Fire;^Grass;^Electric;^Psychic;^Dark;^Ice;^Dragon'") - passed
+Test Q5_J ("python3 q5.py '' ''") - passed
+Test Q0_Remove_Database (Remove the database (should always succeed)) - passed
+12 tests passed 0 tests failed
+</pre>
+
+<p>
+    autotest will enforce timing constraints, if your program takes too long it will be stopped and the test will fail.
+</p>
+<p>
+    If all tests are passing then your programs are within the timing constraints specified.
+</p>
+
+</div></body>
+</html>

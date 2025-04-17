@@ -1,0 +1,443 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>COMP3311 25T1 - Assignment 2</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+<link rel='stylesheet' type='text/css' href='https://www.cse.unsw.edu.au/~cs3311/25T1//course.css'>
+</head>
+<body>
+<div class="container"></head>
+<body>
+<div align='center'>
+<table width='100%' border='0'>
+<tr valign='top'>
+<td align='left' width='25%'>
+  <span class='tiny'><a href="https://www.cse.unsw.edu.au/~cs3311/25T1/">COMP3311 25T1</a></span>
+</td>
+<td align='center' width='50%'>
+  <span class='heading'>Assignment 2</span><br>
+  <span class='subheading'>The Pokemon Database</span>
+</td>
+<td align='right' width='25%'>
+  <span class='tiny'><a href="https://www.cse.unsw.edu.au/~cs3311/25T1/">Database Systems</a></span>
+</td>
+</table>
+</div><div style="text-align:center;font-size:80%;color:#555555;margin-top:5px;">
+Last updated: <b>Friday 28th March 10:00pm</b> <br>
+Most recent changes are shown in <span class="red">red</span> ...
+older changes are shown in <span class="brown">brown</span>. <br>
+</div>
+<p style='text-align:center'>
+<a href='index.html'>[Assignment Spec]</a>&nbsp;&nbsp;
+<b>[SQL Schema]</b>&nbsp;&nbsp;
+<a href='data.html'>[SQL Data]</a>&nbsp;&nbsp;
+<a href='examples.html'>[Examples]</a>&nbsp;&nbsp;
+<a href='testing.php.html'>[Testing]</a>&nbsp;&nbsp;
+</p>
+
+<h3>Introduction</h3>
+
+<p>
+    This document contains a description of the Pokemon database.
+    We give both an ER model and an SQL schema.
+</p>
+
+<hr />
+
+<p>
+	The database contains a large number of tables and
+	relationships.
+	We summarise what each table represents and the
+	kind of information it holds here.
+        <br />
+	More information is given in the downloadable
+	<a href="database/pkmon.schema.sql" download="pkmon.schema.sql">schema</a>.
+</p>
+
+<h3>Overview</h3>
+
+<dl>
+<dt>Pokemon</dt>
+<dd>
+	This table describes general aspects of each Pokemon, including:
+	its unique ID (a combination of a Pokedex number and a variation
+	number), its name, its species, its growth rate, its basic properties
+	(hit points, speed, etc.), and so on.
+</dd>
+<dt>Games</dt>
+<dd>
+	This table indicates which region a particular game occurs in.
+	<br />
+	The game ID is also used as part of a Pokedex, and an Encounter.
+</dd>
+<dt>Types</dt>
+<dd>
+	Each Pokemon has at least one type (e.g. fire, water, ghost, flying).
+	<br />
+	Some Pokemon may have two types.
+	<br />
+	All Moves also have a type.
+</dd>
+<dt>Abilities</dt>
+<dd>
+	Pokemon have a large range of possible abilities
+	(e.g. flame body, gooey, iron fist, neuroforce).
+	<br />
+	A description of each ability is contained in the <tt>effect</tt> column of this table.
+	<br />
+	Each Ability a Pokemon knows is given in the <tt>Knowable_Abilities</tt> table.
+</dd>
+<dt>Moves</dt>
+<dd>
+	Pokemon also have a large range of possible moves they can make
+	(e.g. blizzard, block, bounce, etc.).
+	<br />
+	Each move has an associated category, power and accuracy.
+	<br />
+	Pokemon can potentially learn more move during a game.
+	<br />
+	Each move a Pokemon can learn is given in the <tt>Learnable_Moves</tt> table.
+</dd>
+<dt>Evolutions</dt>
+<dd>
+	Some Pokemon can change form,
+	and this table describes the starting form and final form.
+	<br />
+	What conditions are needed before this change can occur,
+	are given in the <tt>Evolution_Requirements</tt> table.
+</dd>
+<dt>Requirements</dt>
+<dd>
+	Some changes (evolutions, encounters, learnable moves) require certain
+	pre-conditions.
+	<br />
+	The <tt>Requirements</tt> table gives a list of possible pre-conditions
+	which can be applied to the various table associated with "changes".
+</dd>
+<dt>Encounters</dt>
+<dd>
+	Encounters describe where you might find a Pokemon under certain circumstances,
+	how likely the is the encounter is,
+	and at what level the Pokemon may appear.
+</dd>
+<dt>Egg Groups</dt>
+<dd>
+	Pokemon can breed, but only with other Pokemon in the same Egg Group.
+</dd>
+</dl>
+
+<h3>ER Models</h3>
+
+<p>
+    The following ER diagrams show the major components of the Pokemon database:
+</p>
+
+<div align="center">
+    <p>
+        ER diagram of Pokemon relations
+        <br />
+        <small>Attributes have been removed to make the relations more readable</small>
+    </p>
+    <img src="static/pokemon-relations-ER.png" alt="Pokemon Relations ER diagram">
+    <br />
+    <br />
+    <p>
+        ER diagram of Pokemon attributes
+        <br />
+        <small>Relations have been removed to make the attributes more readable</small>
+    </p>
+    <img src="static/pokemon-attributes-ER.png" alt="Pokemon Attributes ER diagram">
+    <br />
+    <br />
+</div>
+
+<h3>SQL Schema</h3>
+
+<p>
+    The following is the SQL schema used in building the Pokemon database:
+</p>
+<pre><code>
+-- COMP3311
+-- 25T1
+-- Assignment 2
+-- Pokemon Database
+
+-- Schema By: Dylan Brotherston <d.brotherston@unsw.edu.au>
+-- Version 1.0
+-- 2025-03-25
+
+CREATE DOMAIN Byte AS
+    Smallint
+    CHECK (
+        VALUE >= 0
+        AND
+        VALUE <= 255
+    )
+;
+
+CREATE DOMAIN Statistic AS
+    Byte
+    CHECK (
+        VALUE >= 1
+    )
+;
+
+CREATE DOMAIN Percentage AS
+    Integer
+    DEFAULT 100
+    CHECK (
+        VALUE >= 0
+    )
+;
+
+CREATE DOMAIN Ratio AS
+    Percentage
+    DEFAULT 50
+    CHECK (
+        VALUE <= 100
+    )
+;
+
+CREATE DOMAIN Probability AS
+    Percentage
+    DEFAULT 0
+    CHECK (
+        VALUE <= 100
+    )
+;
+
+CREATE DOMAIN Meters AS
+    Real
+    CHECK (
+        VALUE >= 0
+    )
+;
+
+CREATE DOMAIN Kilograms AS
+    Real
+    CHECK (
+        VALUE >= 0
+    )
+;
+
+CREATE TYPE _Pokemon_ID AS (
+    Pokedex_Number   Integer,
+    Variation_Number Integer
+);
+
+CREATE DOMAIN Pokemon_ID AS
+    _Pokemon_ID
+    CHECK (
+        (VALUE).Pokedex_Number   IS NOT NULL
+        AND
+        (VALUE).Variation_Number IS NOT NULL
+    )
+;
+
+CREATE TYPE _Stats AS (
+    Hit_Points      Statistic,
+    Attack          Statistic,
+    Defense         Statistic,
+    Special_Attack  Statistic,
+    Special_Defense Statistic,
+    Speed           Statistic
+);
+
+CREATE DOMAIN Stats AS
+    _Stats
+    CHECK (
+        (VALUE).Hit_Points      IS NOT NULL
+        AND
+        (VALUE).Attack          IS NOT NULL
+        AND
+        (VALUE).Defense         IS NOT NULL
+        AND
+        (VALUE).Special_Attack  IS NOT NULL
+        AND
+        (VALUE).Special_Defense IS NOT NULL
+        AND
+        (VALUE).Speed           IS NOT NULL
+    )
+;
+
+CREATE TYPE _Range AS (
+    Min Integer,
+    Max Integer
+);
+
+CREATE DOMAIN Open_Range AS
+    _Range
+    CHECK (
+        (VALUE).Min <= (VALUE).Max
+        AND
+        (
+            (VALUE).Min IS NOT NULL
+            OR
+            (VALUE).Max IS NOT NULL
+        )
+    )
+;
+
+CREATE DOMAIN Closed_Range AS
+    Open_Range
+    CHECK (
+        (VALUE).Min IS NOT NULL
+        AND
+        (VALUE).Max IS NOT NULL
+    )
+;
+
+CREATE TYPE Growth_Rates AS ENUM (
+    'Erratic',
+    'Fast',
+    'Medium Fast',
+    'Medium Slow',
+    'Slow',
+    'Fluctuating'
+);
+
+CREATE TYPE Move_Categories AS ENUM (
+    'Physical',
+    'Special',
+    'Status'
+);
+
+CREATE TYPE Regions AS ENUM (
+    'Kanto',
+    'Johto',
+    'Hoenn',
+    'Sinnoh',
+    'Unova',
+    'Kalos',
+    'Alola',
+    'Galar',
+    'Hisui',
+    'Paldea'
+);
+
+CREATE TABLE Types (
+    ID   SERIAL          PRIMARY KEY,
+    Name Text   NOT NULL UNIQUE
+);
+
+CREATE TABLE Type_Effectiveness (
+    Attacking  Integer             REFERENCES Types (ID),
+    Defending  Integer             REFERENCES Types (ID),
+    Multiplier Percentage NOT NULL,
+    PRIMARY KEY (Attacking, Defending)
+);
+
+CREATE TABLE Requirements (
+    ID        SERIAL          PRIMARY KEY,
+    Assertion Text   NOT NULL UNIQUE
+);
+
+CREATE TABLE Pokemon (
+    ID               Pokemon_ID            PRIMARY KEY,
+    Name             Text         NOT NULL UNIQUE,
+    Species          Text         NOT NULL,
+    First_Type       Integer      NOT NULL REFERENCES Types (ID),
+    Second_Type      Integer               REFERENCES Types (ID),
+    Average_Height   Meters       NOT NULL,
+    Average_Weight   Kilograms    NOT NULL,
+    Catch_Rate       Statistic    NOT NULL,
+    Growth_Rate      Growth_Rates NOT NULL,
+    Experience_Yield Integer      NOT NULL,
+    Gender_Ratio     Ratio,
+    Base_Stats       Stats        NOT NULL,
+    Base_Friendship  Byte         NOT NULL,
+    Base_Egg_Cycles  Integer      NOT NULL
+);
+
+CREATE TABLE Egg_Groups (
+    ID   SERIAL          PRIMARY KEY,
+    Name Text   NOT NULL UNIQUE
+);
+
+CREATE TABLE In_Group (
+    Pokemon   Pokemon_ID REFERENCES Pokemon (ID),
+    Egg_Group Integer    REFERENCES Egg_Groups (ID),
+    PRIMARY KEY (Pokemon, Egg_Group)
+);
+
+CREATE TABLE Evolutions (
+    ID             SERIAL              PRIMARY KEY,
+    Pre_Evolution  Pokemon_ID NOT NULL REFERENCES Pokemon (ID),
+    Post_Evolution Pokemon_ID NOT NULL REFERENCES Pokemon (ID)
+);
+
+CREATE TABLE Evolution_Requirements (
+    Evolution   Integer          REFERENCES Evolutions (ID),
+    Requirement Integer          REFERENCES Requirements (ID),
+    Inverted    Boolean NOT NULL DEFAULT FALSE,
+    PRIMARY KEY (Evolution, Requirement)
+);
+
+CREATE TABLE Games (
+    ID     SERIAL           PRIMARY KEY,
+    Name   Text    NOT NULL UNIQUE,
+    Region Regions NOT NULL
+);
+
+CREATE TABLE Locations (
+    ID         SERIAL           PRIMARY KEY,
+    Name       Text    NOT NULL,
+    Appears_In Integer NOT NULL REFERENCES Games (ID),
+    UNIQUE (Name, Appears_In)
+);
+
+CREATE TABLE Pokedex (
+    National_ID Pokemon_ID          REFERENCES Pokemon (ID),
+    Game        Integer             REFERENCES Games (ID),
+    Regional_ID Integer    NOT NULL,
+    PRIMARY KEY (National_ID, Game)
+);
+
+CREATE TABLE Encounters (
+    ID          SERIAL                PRIMARY KEY,
+    Occurs_With Pokemon_ID   NOT NULL REFERENCES Pokemon (ID),
+    Occurs_At   Integer      NOT NULL REFERENCES Locations (ID),
+    Rarity      Probability  NOT NULL,
+    Levels      Closed_Range NOT NULL
+);
+
+CREATE TABLE Encounter_Requirements (
+    Encounter   Integer          REFERENCES Encounters (ID),
+    Requirement Integer          REFERENCES Requirements (ID),
+    Inverted    Boolean NOT NULL DEFAULT FALSE,
+    PRIMARY KEY (Encounter, Requirement)
+);
+
+
+CREATE TABLE Moves (
+    ID                SERIAL                   PRIMARY KEY,
+    Name              Text            NOT NULL UNIQUE,
+    Effect            Text,
+    Of_Type           Integer         NOT NULL REFERENCES Types (ID),
+    Category          Move_Categories,
+    Power             Statistic,
+    Accuracy          Probability,
+    Base_Power_Points Integer
+);
+
+CREATE TABLE Learnable_Moves (
+    Learnt_By   Pokemon_ID NOT NULL REFERENCES Pokemon (ID),
+    Learnt_In   Integer    NOT NULL REFERENCES Games (ID),
+    Learnt_When Integer    NOT NULL REFERENCES Requirements (ID),
+    Learns      Integer    NOT NULL REFERENCES Moves (ID),
+    PRIMARY KEY (Learnt_By, Learnt_In, Learnt_When, Learns)
+);
+
+CREATE TABLE Abilities (
+    ID     SERIAL          PRIMARY KEY,
+    Name   Text   NOT NULL UNIQUE,
+    Effect Text   NOT NULL
+);
+
+CREATE TABLE Knowable_Abilities (
+    Known_By Pokemon_ID           REFERENCES Pokemon (ID),
+    Knows    Integer              REFERENCES Abilities (ID),
+    Hidden   Boolean     NOT NULL,
+    PRIMARY KEY (Known_By, Knows)
+);
+</code></pre>
