@@ -29,6 +29,22 @@ def main(db):
         return 1
 
     # TODO: your code here
+    cursor = db.cursor()
+    cursor.execute("""
+    SELECT
+        G.name,
+        count(distinct I.egg_group) as eggs,
+        count(distinct P.national_id) as pokemon
+    FROM
+        Pokedex P
+        JOIN In_Group I on (P.national_id = I.pokemon)
+        JOIN Games G on (P.game = G.id)
+    GROUP BY G.name
+    ;
+    """)
+    for tuple in cursor.fetchall():
+        gameName, eggGroup,pokemon = tuple
+        print(gameName, eggGroup,pokemon)
 
 
 if __name__ == '__main__':
