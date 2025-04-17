@@ -30,21 +30,22 @@ def main(db):
 
     # TODO: your code here
     cursor = db.cursor()
-    cursor.execute("""
+    old_query = """
     SELECT
         G.name,
-        count(distinct I.egg_group) as eggs,
-        count(distinct P.national_id) as pokemon
+        count(distinct I.egg_group),
+        count(distinct P.national_id)
     FROM
         Pokedex P
-        JOIN In_Group I on (P.national_id = I.pokemon)
+        LEFT JOIN In_Group I on (P.national_id = I.pokemon)
         JOIN Games G on (P.game = G.id)
     GROUP BY G.name
     ;
-    """)
+    """
+    cursor.execute(new_query)
     print(f"{'GameName':<17} {'#EggGroup':<9} {'#Pokemon':<8}")
     for tuple in cursor.fetchall():
-        GameName, EggGroup,Pokemon = tuple
+        GameName, EggGroup, Pokemon = tuple
         print(f"{GameName:<17} {EggGroup:<9} {Pokemon:<8}")
 
 
