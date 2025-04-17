@@ -42,9 +42,10 @@ def main(db):
     GROUP BY G.name
     ;
     """)
+    print(f"{'GameName':<17} {'#EggGroup':<9} {'#Pokemon':<8}")
     for tuple in cursor.fetchall():
-        gameName, eggGroup,pokemon = tuple
-        print(gameName, eggGroup,pokemon)
+        GameName, EggGroup,Pokemon = tuple
+        print(f"{GameName:<17} {EggGroup:<9} {Pokemon:<8}")
 
 
 if __name__ == '__main__':
