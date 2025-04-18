@@ -30,16 +30,7 @@ def main(db):
 
     # TODO: your code here
     cursor = db.cursor()
-    query = """
-    SELECT
-        T.name,
-        count(distinct M.id) AS Moves
-    FROM
-        Moves M
-        JOIN Types T on (M.of_type = T.id)
-    GROUP BY T.name
-    ;
-    """
+    query = """SELECT * from q2Helper();"""
     cursor.execute(query)
     print(f"{'TypeName':<12} {'#Moves':<8} {'#Pokemon':<8}")
     for tuple in cursor.fetchall():

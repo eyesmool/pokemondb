@@ -113,7 +113,7 @@ CREATE OR REPLACE FUNCTION q2Helper()
         LOOP
             info._type := tuple.type_name;
             info.nmoves := tuple.nmoves;
-            info.npokemon := sigma(tuple.type_name);
+            info.npokemon := nPokemonMore10LearnableMovesWithType(tuple.type_name);
             return next info;
         END LOOP;
     END; $$ language plpgsql;
@@ -129,7 +129,7 @@ CREATE OR REPLACE FUNCTION typeToID (_Type text)
         return id;
     END; $$language plpgsql;
 
-CREATE OR REPLACE FUNCTION sigma(_type text)
+CREATE OR REPLACE FUNCTION nPokemonMore10LearnableMovesWithType(_type text)
     RETURNS integer
     AS $$
     DECLARE
