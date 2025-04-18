@@ -92,3 +92,70 @@ CREATE OR REPLACE FUNCTION Super_Effective(_Type Text)
 -- eg if my_supper_clever_function() depends on my_other_function() then my_other_function() must be defined first
 -- Your Views/Functions Below Here
 --
+
+DROP TYPE IF EXISTS Pokemon10MoveInfo CASCADE;
+CREATE TYPE Pokemon10MoveInfo as (_Type Text, nmoves integer, npokemon integer);
+CREATE OR REPLACE FUNCTION q2Helper()
+    RETURNS SETOF Pokemon10MoveInfo
+    AS $$
+    DECLARE
+        tuple record;
+        info Pokemon10MoveInfo;
+    BEGIN
+        for tuple in
+            SELECT
+                T.name as type_name,
+                count(distinct M.id) AS nmoves
+            FROM
+                Moves M
+                JOIN Types T on (M.of_type = T.id)
+            GROUP BY T.name
+        LOOP
+            info._type := tuple.type_name;
+            info.nmoves := tuple.nmoves;
+            info.npokemon := sigma(tuple.type_name);
+            return next info;
+        END LOOP;
+    END; $$ language plpgsql;
+;
+
+CREATE OR REPLACE FUNCTION typeToID (_Type text)
+    RETURNS text
+    AS $$
+    DECLARE
+        id integer;
+    BEGIN
+        SELECT T.id INTO id FROM Types T WHERE t.name ILIKE _Type;
+        return id;
+    END; $$language plpgsql;
+
+CREATE OR REPLACE FUNCTION sigma(_type text)
+    RETURNS integer
+    AS $$
+    DECLARE
+        npokemon INTEGER;
+        qry TEXT;
+    BEGIN
+        qry := '
+        SELECT COUNT(*)
+        FROM
+            (SELECT
+                P.name,
+                count(distinct M.name)
+            FROM
+                Moves M
+                JOIN Learnable_Moves L ON (M.id = L.learns)
+                JOIN Pokemon P ON (P.id = L.learnt_by)
+                JOIN Types T ON (T.id = M.of_type)
+            WHERE t.name = '|| quote_literal(_type) ||'  AND P.first_type = '|| typeToID(_type) ||'
+            GROUP BY P.name
+            HAVING count(distinct M.name) > 10
+            ) AS Foo;
+        ';
+        
+        EXECUTE qry INTO npokemon;
+        RETURN npokemon;
+    END;$$ LANGUAGE plpgsql;
+
+
+

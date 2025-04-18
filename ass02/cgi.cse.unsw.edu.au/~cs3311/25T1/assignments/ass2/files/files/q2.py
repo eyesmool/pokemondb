@@ -32,13 +32,12 @@ def main(db):
     cursor = db.cursor()
     query = """
     SELECT
-        M.id AS Moves,
-        T.name
+        T.name,
+        count(distinct M.id) AS Moves
     FROM
         Moves M
         JOIN Types T on (M.of_type = T.id)
-        JOIN Learnable_Moves L on (M.id = L.learns)
-        JOIN Pokemon P on (P.id = L.learnt_by)
+    GROUP BY T.name
     ;
     """
     cursor.execute(query)
