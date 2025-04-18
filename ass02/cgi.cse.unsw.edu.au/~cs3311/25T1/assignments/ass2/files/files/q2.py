@@ -7,7 +7,7 @@ COMP3311
 Assignment 2
 Pokemon Database
 
-Written by: <YOUR NAME HERE> <YOUR STUDENT ID HERE>
+Written by: Richard z5513417
 Written on: <DATE HERE>
 
 File Name: Q2.py
@@ -29,6 +29,23 @@ def main(db):
         return 1
 
     # TODO: your code here
+    cursor = db.cursor()
+    query = """
+    SELECT
+        M.id AS Moves,
+        T.name
+    FROM
+        Moves M
+        JOIN Types T on (M.of_type = T.id)
+        JOIN Learnable_Moves L on (M.id = L.learns)
+        JOIN Pokemon P on (P.id = L.learnt_by)
+    ;
+    """
+    cursor.execute(query)
+    print(f"{'TypeName':<12} {'#Moves':<8} {'#Pokemon':<8}")
+    for tuple in cursor.fetchall():
+        TypeName, Moves, Pokemon = tuple
+        print(f"{TypeName:<17} {Moves:<9} {Pokemon:<8}")
 
 
 if __name__ == '__main__':

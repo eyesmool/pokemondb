@@ -7,8 +7,8 @@ COMP3311
 Assignment 2
 Pokemon Database
 
-Written by: <YOUR NAME HERE> <YOUR STUDENT ID HERE>
-Written on: <DATE HERE>
+Written by: Richard z5513417
+Written on: 18th April
 
 File Name: Q1.py
 """
@@ -28,21 +28,20 @@ def main(db):
         print(USAGE)
         return 1
 
-    # TODO: your code here
     cursor = db.cursor()
-    old_query = """
+    query = """
     SELECT
         G.name,
-        count(distinct I.egg_group),
-        count(distinct P.national_id)
+        COUNT(DISTINCT I.egg_group),
+        COUNT(DISTINCT P.national_id)
     FROM
         Pokedex P
-        LEFT JOIN In_Group I on (P.national_id = I.pokemon)
-        JOIN Games G on (P.game = G.id)
+        LEFT JOIN In_Group I ON (P.national_id = I.pokemon)
+        JOIN Games G ON (P.game = G.id)
     GROUP BY G.name
     ;
     """
-    cursor.execute(new_query)
+    cursor.execute(query)
     print(f"{'GameName':<17} {'#EggGroup':<9} {'#Pokemon':<8}")
     for tuple in cursor.fetchall():
         GameName, EggGroup, Pokemon = tuple
