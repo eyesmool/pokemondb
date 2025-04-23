@@ -34,7 +34,7 @@ def main(db):
     print(f"{'TypeName':<12} {'#Moves':<8} {'#Pokemon':<8}")
     for tuple in cursor.fetchall():
         TypeName, Moves, Pokemon = tuple
-        print(f"{TypeName:<17} {Moves:<9} {Pokemon:<8}")
+        print(f"{TypeName:<12} {Moves:<8} {Pokemon:<8}")
 
 
 if __name__ == '__main__':
