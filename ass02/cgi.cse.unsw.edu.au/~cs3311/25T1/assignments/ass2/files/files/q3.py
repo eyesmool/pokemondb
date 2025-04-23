@@ -36,7 +36,7 @@ def main(db):
     query = "SELECT * FROM q3Helper(%s);"
     cursor.execute(query, (pokemon_name,))
     result = cursor.fetchall()
-    print(f"{'MoveName':<16} {'#Games':<6} {'AvgLearntLevel':<16}")
+    print(f"{'MoveName':<16} {'#Games':<6} {'#AvgLearntLevel':<16}")
     for tuple in result:
         MoveName, Games, AvgLearntLevel = tuple
         print(f"{MoveName:<16} {Games:<6} {AvgLearntLevel:<16}")
