@@ -7,8 +7,8 @@ COMP3311
 Assignment 2
 Pokemon Database
 
-Written by: <YOUR NAME HERE> <YOUR STUDENT ID HERE>
-Written on: <DATE HERE>
+Written by: Richard z5513417
+Written on: 23rd April
 
 File Name: Q3
 """
@@ -31,11 +31,21 @@ def main(db):
 
     pokemon_name = sys.argv[1]
 
-    # TODO: your code here
     cursor = db.cursor()
     query = "SELECT * FROM q3Helper(%s);"
+    checkPokemonExists = "SELECT * FROM pkmonNameToId(%s);"
+    cursor.execute(checkPokemonExists, (pokemon_name,))
+    result = cursor.fetchall()
+    for tuple in result:
+        pokedex_number, variation_number = tuple
+        if pokedex_number is None or  variation_number is None:
+            print(f'Pokemon "{pokemon_name}" not found')
+            return 0
     cursor.execute(query, (pokemon_name,))
     result = cursor.fetchall()
+    if not result:
+        print(f'No moves learnable in at least 30 games found for Pokemon "{pokemon_name}"')
+        return 0
     print(f"{'MoveName':<16} {'#Games':<6} {'#AvgLearntLevel':<16}")
     for tuple in result:
         MoveName, Games, AvgLearntLevel = tuple

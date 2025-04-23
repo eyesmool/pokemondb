@@ -163,7 +163,7 @@ CREATE OR REPLACE FUNCTION pkmonNameToId(pkmonName text)
     RETURNS _Pokemon_ID
     AS $$
     DECLARE
-        result _Pokemon_ID;
+        result _Pokemon_ID := (NULL, NULL);
     BEGIN
         SELECT (P.ID).Pokedex_Number, (P.ID).Variation_Number
         INTO result
