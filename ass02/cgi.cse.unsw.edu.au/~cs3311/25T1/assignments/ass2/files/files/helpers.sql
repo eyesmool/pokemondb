@@ -186,18 +186,19 @@ CREATE OR REPLACE FUNCTION q3Helper(_pkmonName text)
         for tuple in
             SELECT
                 M.name as MoveName,
-                COUNT(distinct L.learnt_in) as Games
+                COUNT(distinct L.learnt_in) as Games,
+                AVG(L.learnt_when) as AvgLearntLevel
             FROM
                 Pokemon P
                 JOIN Learnable_Moves L ON (P.id = L.learnt_by)
                 JOIN Moves M ON (L.learns = M.id)
             WHERE L.Learnt_By = pkmonNameToId(_pkmonName)  AND L.Learnt_When <= 100 AND L.Learnt_When >= 1
             GROUP BY M.name
-            HAVING COUNT(distinct L.learnt_in) > 30
+            HAVING COUNT(distinct L.learnt_in) >= 30
         LOOP
         info._MoveName := tuple.movename;
         info.nGames := tuple.games;
-        info.AvgLearntLevel := 69;
+        info.AvgLearntLevel := tuple.avglearntlevel;
         return next info;
         END LOOP;
     END;
