@@ -157,19 +157,22 @@ CREATE OR REPLACE FUNCTION nPokemonMore10LearnableMovesWithType(_type text)
         RETURN npokemon;
     END;$$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION pkmonNameToId (pkmonName text)
-    RETURNS Integer
+
+
+CREATE OR REPLACE FUNCTION pkmonNameToId(pkmonName text)
+    RETURNS _Pokemon_ID
     AS $$
     DECLARE
-        result Integer;
+        result _Pokemon_ID;
     BEGIN
-        SELECT P.id
+        SELECT (P.ID).Pokedex_Number, (P.ID).Variation_Number
         INTO result
         FROM Pokemon P
-        WHERE P.name LIKE pkmonName;
+        WHERE P.name ILIKE pkmonName;
 
         RETURN result;
-    END; $$language plpgsql;
+    END;
+$$ LANGUAGE plpgsql;
 
 DROP TYPE IF EXISTS q3Info CASCADE;
 CREATE TYPE q3Info as (_MoveName text, nGames integer, AvgLearntLevel integer);
@@ -180,10 +183,10 @@ CREATE OR REPLACE FUNCTION q3Helper(_pkmonName text)
         tuple record;
         info q3Info;
     BEGIN
-        for tuple in 
+        for tuple in
             SELECT
-                M.name as name,
-                COUNT(distinct L.learnt_in) as games
+                M.name as MoveName,
+                COUNT(distinct L.learnt_in) as Games
             FROM
                 Pokemon P
                 JOIN Learnable_Moves L ON (P.id = L.learnt_by)
@@ -192,11 +195,12 @@ CREATE OR REPLACE FUNCTION q3Helper(_pkmonName text)
             GROUP BY M.name
             HAVING COUNT(distinct L.learnt_in) > 30
         LOOP
-        tuple._MoveName := tuple.name;
-        tuple.nGames := tuple.games;
-        tuple.AvgLearntLevel := 69;
+        info._MoveName := tuple.movename;
+        info.nGames := tuple.games;
+        info.AvgLearntLevel := 69;
         return next info;
         END LOOP;
-    END; $$ language plpgsql
+    END;
+$$ language plpgsql
 
 
