@@ -32,7 +32,19 @@ def main(db):
     pokemon_name = sys.argv[1]
 
     # TODO: your code here
-
+    qry_pokemon_moves_games = '''
+    SELECT
+        M.name,
+        COUNT(distinct L.learnt_in)
+    FROM
+        Pokemon P
+        JOIN Learnable_Moves L ON (P.id = L.learnt_by)
+        JOIN Moves M ON (L.learns = M.id)
+    WHERE L.Learnt_By = (1,0) AND L.Learnt_When <= 100 AND L.Learnt_When >= 1
+    GROUP BY M.name
+    HAVING COUNT(distinct L.learnt_in) > 30
+    ;
+    '''
 
 if __name__ == '__main__':
     exit_code = 0

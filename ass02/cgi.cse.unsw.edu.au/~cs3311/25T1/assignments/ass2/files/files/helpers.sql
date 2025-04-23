@@ -157,5 +157,46 @@ CREATE OR REPLACE FUNCTION nPokemonMore10LearnableMovesWithType(_type text)
         RETURN npokemon;
     END;$$ LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION pkmonNameToId (pkmonName text)
+    RETURNS Integer
+    AS $$
+    DECLARE
+        result Integer;
+    BEGIN
+        SELECT P.id
+        INTO result
+        FROM Pokemon P
+        WHERE P.name LIKE pkmonName;
+
+        RETURN result;
+    END; $$language plpgsql;
+
+DROP TYPE IF EXISTS q3Info CASCADE;
+CREATE TYPE q3Info as (_MoveName text, nGames integer, AvgLearntLevel integer);
+CREATE OR REPLACE FUNCTION q3Helper(_pkmonName text)
+    RETURNS SETOF q3Info
+    AS $$
+    DECLARE
+        tuple record;
+        info q3Info;
+    BEGIN
+        for tuple in 
+            SELECT
+                M.name as name,
+                COUNT(distinct L.learnt_in) as games
+            FROM
+                Pokemon P
+                JOIN Learnable_Moves L ON (P.id = L.learnt_by)
+                JOIN Moves M ON (L.learns = M.id)
+            WHERE L.Learnt_By = pkmonNameToId(_pkmonName)  AND L.Learnt_When <= 100 AND L.Learnt_When >= 1
+            GROUP BY M.name
+            HAVING COUNT(distinct L.learnt_in) > 30
+        LOOP
+        tuple._MoveName := tuple.name;
+        tuple.nGames := tuple.games;
+        tuple.AvgLearntLevel := 69;
+        return next info;
+        END LOOP;
+    END; $$ language plpgsql
 
 

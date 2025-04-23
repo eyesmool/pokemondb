@@ -8,7 +8,7 @@ Assignment 2
 Pokemon Database
 
 Written by: Richard z5513417
-Written on: <DATE HERE>
+Written on: 18th April
 
 File Name: Q2.py
 """
@@ -28,7 +28,6 @@ def main(db):
         print(USAGE)
         return 1
 
-    # TODO: your code here
     cursor = db.cursor()
     query = """SELECT * from q2Helper();"""
     cursor.execute(query)
