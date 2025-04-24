@@ -32,7 +32,15 @@ def main(db):
     pokemon_name = sys.argv[1]
 
     # TODO: your code here
-
+    query =  """
+    SELECT 
+        P.name
+    FROM
+        Pokemon P
+    WHERE P.name ILIKE '%pik%'
+    ORDER BY name
+    ;
+    """
 
 if __name__ == '__main__':
     exit_code = 0

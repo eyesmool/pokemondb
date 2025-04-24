@@ -196,12 +196,83 @@ CREATE OR REPLACE FUNCTION q3Helper(_pkmonName text)
             GROUP BY M.name
             HAVING COUNT(distinct L.learnt_in) >= 30
         LOOP
-        info._MoveName := tuple.movename;
-        info.nGames := tuple.games;
-        info.AvgLearntLevel := tuple.avglearntlevel;
+            info._MoveName := tuple.movename;
+            info.nGames := tuple.games;
+            info.AvgLearntLevel := tuple.avglearntlevel;
         return next info;
         END LOOP;
     END;
-$$ language plpgsql
+$$ language plpgsql;
+
+DROP TYPE IF EXISTS strMatchInfo CASCADE;
+CREATE TYPE strMatchInfo AS (id _Pokemon_ID, name text);
+CREATE OR REPLACE FUNCTION pkmonStrMatch(_pkmonName text)
+    RETURNS SETOF strMatchInfo
+    AS $$
+    DECLARE
+        tuple record;
+        info strMatchInfo;
+    BEGIN
+        for tuple in
+            SELECT
+                P.id,
+                P.name
+            FROM
+                Pokemon P
+            WHERE P.name ILIKE '%' || _pkmonName || '%'
+            ORDER BY name
+        LOOP
+            info.id := tuple.id;
+            info.name := tuple.name;
+        RETURN NEXT info;
+        END LOOP;
+    END;
+$$ language plpgsql;
+
+DROP TYPE IF EXISTS leafInfo CASCADE;
+CREATE TYPE leafInfo as (pkmonId _Pokemon_ID, leafId _Pokemon_ID);
+CREATE OR REPLACE FUNCTION findLeafEvlns(_pkmonName text)
+    RETURNS SETOF leafInfo
+    AS $$
+    DECLARE
+        tuple record;
+        info leafInfo;
+    BEGIN
+        FOR tuple IN
+            SELECT * FROM pkmonStrMatch(_pkmonName)
+        LOOP
+            info.pkmonId := tuple.id;
+            info.leafId := 69;
+            RETURN NEXT info;
+        END LOOP;
+    END;
+$$ language plpgsql;
+
+
+CREATE OR REPLACE FUNCTION findLeafEvlnHelper(_id _Pokemon_ID)
+    RETURNS _Pokemon_ID
+    AS $$
+    DECLARE
+        leafId _Pokemon_ID := _id;
+        prevId _Pokemon_ID;
+    BEGIN
+        -- Check if _pkmonId has any previous evolutions
+        SELECT (E.pre_evolution).Pokedex_Number, (E.pre_evolution).Variation_Number
+        INTO prevId
+        FROM Evolutions E
+        WHERE
+            E.post_evolution = _id;
+
+
+        IF prevId IS NULL THEN
+            -- No previous evolutions, this is the root/base
+            RETURN leafId;
+        ELSE
+            -- Recurse on the previous evolution
+            RETURN findLeafEvlnHelper(prevId);
+        END IF;
+    END;
+$$ language plpgsql;
+
 
 
