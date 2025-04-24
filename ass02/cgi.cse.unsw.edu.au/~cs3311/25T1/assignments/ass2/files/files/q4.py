@@ -69,6 +69,9 @@ def main(db):
             print("- No Evolutions")
             continue
 
+        # Remove duplicate (evln_pre, evln_post, evln_id) tuples
+        evos = list(dict.fromkeys(evos))
+
         # Find all unique evln_pre that are not evln_post
         pre_set = set(evln_pre for evln_pre, _, _ in evos if evln_pre)
         post_set = set(evln_post for _, evln_post, _ in evos if evln_post)
@@ -76,12 +79,14 @@ def main(db):
         if not roots:
             roots = pre_set
 
-        def print_chain(curr, depth):
-            next_evos = [
-                (evln_post, evln_id)
-                for evln_pre, evln_post, evln_id in evos
-                if evln_pre == curr
-            ]
+        def print_chain(curr, depth, visited):
+            # Find all unique (evln_post, evln_id) for this curr, preserving order
+            next_evos = []
+            seen = set()
+            for evln_pre, evln_post, evln_id in evos:
+                if evln_pre == curr and (evln_post, evln_id) not in seen:
+                    next_evos.append((evln_post, evln_id))
+                    seen.add((evln_post, evln_id))
             if depth == 0:
                 print(curr)
             if not next_evos:
@@ -89,10 +94,12 @@ def main(db):
             for evln_post, evln_id in next_evos:
                 req_str = get_evolution_req(db, evln_id)
                 print("+" * (depth + 1), f'For "{evln_post}", The evolution requirement is {req_str}')
-                print_chain(evln_post, depth + 1)
+                # Avoid infinite loops in case of cycles
+                if (evln_post, evln_id) not in visited:
+                    print_chain(evln_post, depth + 1, visited | {(evln_post, evln_id)})
 
         for root in sorted(roots):
-            print_chain(root, 0)
+            print_chain(root, 0, set())
 
 
 if __name__ == '__main__':

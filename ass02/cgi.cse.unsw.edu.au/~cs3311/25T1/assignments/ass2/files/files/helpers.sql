@@ -320,18 +320,15 @@ CREATE OR REPLACE FUNCTION findLeafEvlns(_pkmonName text)
 ;
 
 -- Function: findEvlnReqId(pre _Pokemon_ID, post _Pokemon_ID)
--- Returns the evolution ID for a given pre- and post-evolution pair
+-- Returns the evolution ID(s) for a given pre- and post-evolution pair
 CREATE OR REPLACE FUNCTION findEvlnReqId(pre _Pokemon_ID, post _Pokemon_ID)
-    RETURNS integer
+    RETURNS TABLE(evln_id integer)
     AS $$
-    DECLARE
-        req_id integer;
     BEGIN
-        SELECT E.id
-        INTO req_id
+        RETURN QUERY
+        SELECT E.id AS evln_id
         FROM Evolutions E
-        WHERE pre = E.pre_evolution AND post = E.post_evolution;
-        RETURN req_id;
+        WHERE E.pre_evolution = pre AND E.post_evolution = post;
     END;
     $$ LANGUAGE plpgsql
 ;
@@ -353,6 +350,7 @@ CREATE OR REPLACE FUNCTION findEvlnInfo(_id _Pokemon_ID)
     AS $$
     DECLARE
         tuple RECORD;
+        tuple1 RECORD;
         info evlnInfo;
         result evlnInfo;
     BEGIN
@@ -360,10 +358,12 @@ CREATE OR REPLACE FUNCTION findEvlnInfo(_id _Pokemon_ID)
             SELECT DISTINCT
                 P.name,
                 E.pre_evolution AS pkmon_id,
-                E.post_evolution AS post_ev_id
+                E.post_evolution AS post_ev_id,
+                ER.Evolution AS evln_id
             FROM
                 Evolutions E
                 JOIN Pokemon P ON P.id = E.pre_evolution
+                JOIN Evolution_Requirements ER on E.id = ER.Evolution
             WHERE
                 E.pre_evolution = _id
             ORDER BY post_ev_id DESC
@@ -372,15 +372,15 @@ CREATE OR REPLACE FUNCTION findEvlnInfo(_id _Pokemon_ID)
             info.pre_ev_id := tuple.pkmon_id;
             info.post_name := pkmonIdToName(tuple.post_ev_id);
             info.post_ev_id := tuple.post_ev_id;
-            info.evln_id := findEvlnReqId(tuple.pkmon_id, tuple.post_ev_id);
+            info.evln_id := tuple.evln_id;
             RETURN NEXT info;
-            IF tuple.post_ev_id IS NOT NULL THEN
-                FOR result IN
-                    SELECT DISTINCT * FROM findEvlnInfo(tuple.post_ev_id)
-                LOOP
-                    RETURN NEXT result;
-                END LOOP;
-            END IF;
+        IF tuple.post_ev_id IS NOT NULL THEN
+            FOR result IN
+                SELECT DISTINCT * FROM findEvlnInfo(tuple.post_ev_id)
+            LOOP
+                RETURN NEXT result;
+            END LOOP;
+        END IF;
         END LOOP;
     END;
     $$ LANGUAGE plpgsql
@@ -442,7 +442,7 @@ CREATE OR REPLACE FUNCTION evolutionReq(evln_id integer)
     AS $$
     BEGIN
         RETURN QUERY
-        SELECT 
+        SELECT
             E.inverted,
             R.assertion
         FROM
