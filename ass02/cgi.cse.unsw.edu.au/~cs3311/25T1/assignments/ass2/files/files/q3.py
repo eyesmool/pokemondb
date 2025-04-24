@@ -35,12 +35,11 @@ def main(db):
     query = "SELECT * FROM q3Helper(%s);"
     checkPokemonExists = "SELECT * FROM pkmonNameToId(%s);"
     cursor.execute(checkPokemonExists, (pokemon_name,))
-    result = cursor.fetchall()
-    for tuple in result:
-        pokedex_number, variation_number = tuple
-        if pokedex_number is None or  variation_number is None:
-            print(f'Pokemon "{pokemon_name}" not found')
-            return 0
+    result = cursor.fetchone()
+    if result is None or any(x is None for x in result):
+        print(f'Pokemon "{pokemon_name}" not found')
+        return 0
+    pokedex_number, variation_number = result
     cursor.execute(query, (pokemon_name,))
     result = cursor.fetchall()
     if not result:
