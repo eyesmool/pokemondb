@@ -174,6 +174,25 @@ CREATE OR REPLACE FUNCTION pkmonNameToId(pkmonName text)
     END;
 $$ LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION pkmonIdToName(_id _Pokemon_ID)
+    RETURNS text
+    AS $$
+    DECLARE
+        result text;
+    BEGIN
+        SELECT P.name
+        INTO result
+        FROM Pokemon P
+        WHERE P.id = _id;
+
+        IF result IS NULL THEN
+            RAISE EXCEPTION 'No Pokemon found with ID %', _id;
+        END IF;
+
+        RETURN result;
+    END;
+$$ LANGUAGE plpgsql;
+
 DROP TYPE IF EXISTS q3Info CASCADE;
 CREATE TYPE q3Info as (_MoveName text, nGames integer, AvgLearntLevel integer);
 CREATE OR REPLACE FUNCTION q3Helper(_pkmonName text)
@@ -289,7 +308,7 @@ CREATE OR REPLACE FUNCTION findEvlnReqId(pre _Pokemon_ID, post _Pokemon_ID)
 $$ language plpgsql;
 
 DROP TYPE IF EXISTS evlnInfo CASCADE;
-CREATE TYPE evlnInfo AS (name text, pkmon_id _Pokemon_ID, post_ev_id _Pokemon_ID, evln_reqs_id integer);
+CREATE TYPE evlnInfo AS (pre_name text, pre_ev_id _Pokemon_ID, post_name text, post_ev_id _Pokemon_ID, evln_id integer);
 CREATE OR REPLACE FUNCTION findEvlnInfo(_id _Pokemon_ID)
     RETURNS SETOF evlnInfo
     AS $$
@@ -308,11 +327,13 @@ CREATE OR REPLACE FUNCTION findEvlnInfo(_id _Pokemon_ID)
                 JOIN Pokemon P ON P.id = E.pre_evolution
             WHERE
                 E.pre_evolution = _id
+            ORDER BY post_ev_id DESC
         LOOP
-            info.name := tuple.name;
-            info.pkmon_id := tuple.pkmon_id;
+            info.pre_name := tuple.name;
+            info.pre_ev_id := tuple.pkmon_id;
+            info.post_name := pkmonIdToName(tuple.post_ev_id);
             info.post_ev_id := tuple.post_ev_id;
-            info.evln_reqs_id := findEvlnReqId(tuple.pkmon_id, tuple.post_ev_id);
+            info.evln_id := findEvlnReqId(tuple.pkmon_id, tuple.post_ev_id);
             RETURN NEXT info;
             IF tuple.post_ev_id IS NOT NULL THEN
                 FOR result IN
@@ -324,6 +345,39 @@ CREATE OR REPLACE FUNCTION findEvlnInfo(_id _Pokemon_ID)
         END LOOP;
     END;
 $$ LANGUAGE plpgsql;
+
+DROP TYPE IF EXISTS q4Info CASCADE;
+CREATE TYPE q4Info AS (pkmonMatch text, evln_pre text, evln_post text, evln_id integer);
+CREATE OR REPLACE FUNCTION q4Helper(_pkmonName text)
+    RETURNS SETOF q4Info
+    AS $$
+    DECLARE
+        tuple1 record;
+        tuple2 record;
+        info q4Info;
+    BEGIN
+        FOR tuple1 IN
+            SELECT * FROM pkmonStrMatch(_pkmonName)
+        LOOP
+            info.pkmonMatch := tuple1.name;
+            FOR tuple2 IN
+                SELECT * FROM findEvlnInfo(findLeafEvlnHelper(tuple1.id))
+            LOOP
+                info.evln_pre := tuple2.pre_name;
+                info.evln_post := tuple2.post_name;
+                info.evln_id := tuple2.evln_id;
+                RETURN NEXT info;
+            END LOOP;
+            IF NOT FOUND THEN
+                info.evln_pre := NULL;
+                info.evln_post := NULL;
+                info.evln_id := NULL;
+                RETURN NEXT info;
+            END IF;
+        END LOOP;
+    END;
+$$ language plpgsql;
+
 
 
 
