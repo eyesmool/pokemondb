@@ -7,8 +7,8 @@ COMP3311
 Assignment 2
 Pokemon Database
 
-Written by: <YOUR NAME HERE> <YOUR STUDENT ID HERE>
-Written on: <DATE HERE>
+Written by: Richard z5513417
+Written on: 23rd April
 
 File Name: Q4
 """
