@@ -123,14 +123,14 @@ CREATE OR REPLACE FUNCTION typeToID (_Type text)
     RETURNS text
     AS $$
     DECLARE
-        id integer;
+        id Integer;
     BEGIN
         SELECT T.id INTO id FROM Types T WHERE t.name ILIKE _Type;
         return id;
     END; $$language plpgsql;
 
 CREATE OR REPLACE FUNCTION nPokemonMore10LearnableMovesWithType(_type text)
-    RETURNS integer
+    RETURNS Integer
     AS $$
     DECLARE
         npokemon INTEGER;
@@ -229,26 +229,6 @@ CREATE OR REPLACE FUNCTION pkmonStrMatch(_pkmonName text)
     END;
 $$ language plpgsql;
 
-DROP TYPE IF EXISTS leafInfo CASCADE;
-CREATE TYPE leafInfo as (pkmonId _Pokemon_ID, leafId _Pokemon_ID);
-CREATE OR REPLACE FUNCTION findLeafEvlns(_pkmonName text)
-    RETURNS SETOF leafInfo
-    AS $$
-    DECLARE
-        tuple record;
-        info leafInfo;
-    BEGIN
-        FOR tuple IN
-            SELECT * FROM pkmonStrMatch(_pkmonName)
-        LOOP
-            info.pkmonId := tuple.id;
-            info.leafId := 69;
-            RETURN NEXT info;
-        END LOOP;
-    END;
-$$ language plpgsql;
-
-
 CREATE OR REPLACE FUNCTION findLeafEvlnHelper(_id _Pokemon_ID)
     RETURNS _Pokemon_ID
     AS $$
@@ -263,7 +243,6 @@ CREATE OR REPLACE FUNCTION findLeafEvlnHelper(_id _Pokemon_ID)
         WHERE
             E.post_evolution = _id;
 
-
         IF prevId IS NULL THEN
             -- No previous evolutions, this is the root/base
             RETURN leafId;
@@ -273,6 +252,81 @@ CREATE OR REPLACE FUNCTION findLeafEvlnHelper(_id _Pokemon_ID)
         END IF;
     END;
 $$ language plpgsql;
+
+DROP TYPE IF EXISTS leafInfo CASCADE;
+CREATE TYPE leafInfo as (name text, pkmon_Id _Pokemon_ID, leaf_Id _Pokemon_ID);
+CREATE OR REPLACE FUNCTION findLeafEvlns(_pkmonName text)
+    RETURNS SETOF leafInfo
+    AS $$
+    DECLARE
+        tuple record;
+        info leafInfo;
+    BEGIN
+        FOR tuple IN
+            SELECT * FROM pkmonStrMatch(_pkmonName)
+        LOOP
+            info.name := tuple.name;
+            info.pkmon_id := tuple.id;
+            info.leaf_id := findLeafEvlnHelper(tuple.id);
+            RETURN NEXT info;
+        END LOOP;
+    END;
+$$ language plpgsql;
+
+CREATE OR REPLACE FUNCTION findEvlnReqId(pre _Pokemon_ID, post _Pokemon_ID)
+    RETURNS integer
+    AS $$
+    DECLARE
+        req_id integer;
+    BEGIN
+        SELECT E.id
+        INTO req_id
+        FROM Evolutions E
+        WHERE pre = E.pre_evolution AND post = E.post_evolution;
+
+        RETURN req_id;
+    END;
+$$ language plpgsql;
+
+DROP TYPE IF EXISTS evlnInfo CASCADE;
+CREATE TYPE evlnInfo AS (name text, pkmon_id _Pokemon_ID, post_ev_id _Pokemon_ID, evln_reqs_id integer);
+CREATE OR REPLACE FUNCTION findEvlnInfo(_id _Pokemon_ID)
+    RETURNS SETOF evlnInfo
+    AS $$
+    DECLARE
+        tuple record;
+        info evlnInfo;
+        result evlnInfo;
+    BEGIN
+        FOR tuple IN
+            SELECT
+                P.name,
+                E.pre_evolution AS pkmon_id,
+                E.post_evolution AS post_ev_id
+            FROM
+                Evolutions E
+                JOIN Pokemon P ON P.id = E.pre_evolution
+            WHERE
+                E.pre_evolution = _id
+        LOOP
+            info.name := tuple.name;
+            info.pkmon_id := tuple.pkmon_id;
+            info.post_ev_id := tuple.post_ev_id;
+            info.evln_reqs_id := findEvlnReqId(tuple.pkmon_id, tuple.post_ev_id);
+            RETURN NEXT info;
+            IF tuple.post_ev_id IS NOT NULL THEN
+                FOR result IN
+                SELECT * FROM findEvlnInfo(tuple.post_ev_id)
+                LOOP
+                    RETURN NEXT result;
+                END LOOP;
+            END IF;
+        END LOOP;
+    END;
+$$ LANGUAGE plpgsql;
+
+
+
 
 
 
