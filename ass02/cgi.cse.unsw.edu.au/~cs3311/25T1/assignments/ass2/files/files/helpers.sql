@@ -378,6 +378,23 @@ CREATE OR REPLACE FUNCTION q4Helper(_pkmonName text)
     END;
 $$ language plpgsql;
 
+DROP TYPE IF EXISTS evolutionReqInfo CASCADE;
+CREATE TYPE evolutionReqInfo AS (inverted boolean, assertion text);
+CREATE OR REPLACE FUNCTION evolutionReq(evln_id integer)
+    RETURNS SETOF evolutionReqInfo
+    AS $$
+    BEGIN
+        RETURN QUERY
+        SELECT 
+            E.inverted,
+            R.assertion
+        FROM
+            Evolution_Requirements E
+            JOIN Requirements R on R.id = E.requirement
+        WHERE evolution = evln_id;
+    END;
+$$ LANGUAGE plpgsql;
+
 
 
 
