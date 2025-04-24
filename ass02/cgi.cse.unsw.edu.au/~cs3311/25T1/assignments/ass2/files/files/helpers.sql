@@ -344,7 +344,7 @@ CREATE TYPE evlnInfo AS (
 );
 
 -- Function: findEvlnInfo(_id _Pokemon_ID)
--- Recursively finds all evolutions starting from a given Pokemon ID
+-- Recursively finds all evolutions starting from a given Pokemon ID, ordered by post_name
 CREATE OR REPLACE FUNCTION findEvlnInfo(_id _Pokemon_ID)
     RETURNS SETOF evlnInfo
     AS $$
@@ -359,14 +359,15 @@ CREATE OR REPLACE FUNCTION findEvlnInfo(_id _Pokemon_ID)
                 P.name,
                 E.pre_evolution AS pkmon_id,
                 E.post_evolution AS post_ev_id,
-                ER.Evolution AS evln_id
+                ER.Evolution AS evln_id,
+                pkmonIdToName(E.post_evolution) AS post_name_sort
             FROM
                 Evolutions E
                 JOIN Pokemon P ON P.id = E.pre_evolution
                 JOIN Evolution_Requirements ER on E.id = ER.Evolution
             WHERE
                 E.pre_evolution = _id
-            ORDER BY post_ev_id DESC
+            ORDER BY post_name_sort
         LOOP
             info.pre_name := tuple.name;
             info.pre_ev_id := tuple.pkmon_id;
@@ -374,13 +375,13 @@ CREATE OR REPLACE FUNCTION findEvlnInfo(_id _Pokemon_ID)
             info.post_ev_id := tuple.post_ev_id;
             info.evln_id := tuple.evln_id;
             RETURN NEXT info;
-        IF tuple.post_ev_id IS NOT NULL THEN
-            FOR result IN
-                SELECT DISTINCT * FROM findEvlnInfo(tuple.post_ev_id)
-            LOOP
-                RETURN NEXT result;
-            END LOOP;
-        END IF;
+            IF tuple.post_ev_id IS NOT NULL THEN
+                FOR result IN
+                    SELECT DISTINCT * FROM findEvlnInfo(tuple.post_ev_id)
+                LOOP
+                    RETURN NEXT result;
+                END LOOP;
+            END IF;
         END LOOP;
     END;
     $$ LANGUAGE plpgsql
@@ -410,8 +411,12 @@ CREATE OR REPLACE FUNCTION q4Helper(_pkmonName text)
         LOOP
             info.pkmonMatch := tuple1.name;
             FOR tuple2 IN
-                SELECT * FROM findEvlnInfo(findLeafEvlnHelper(tuple1.id))
+                SELECT *
+                FROM findEvlnInfo(findLeafEvlnHelper(tuple1.id))
+                ORDER BY post_name
             LOOP
+                RAISE NOTICE '%', tuple1;
+                RAISE NOTICE '%', tuple2;
                 info.evln_pre := tuple2.pre_name;
                 info.evln_post := tuple2.post_name;
                 info.evln_id := tuple2.evln_id;
