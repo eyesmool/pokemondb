@@ -33,6 +33,12 @@ def main(db):
     pokemon_name = sys.argv[1]
 
     cursor = db.cursor()
+    checkPokemonExists = "SELECT * FROM pkmonNameToId(%s);"
+    cursor.execute(checkPokemonExists, (pokemon_name,))
+    result = cursor.fetchone()
+    if result is None or any(x is None for x in result):
+        print(f'Pokemon "{pokemon_name}" not found')
+        return 0
     query = "SELECT * FROM q4Helper(%s);"
     cursor.execute(query, (pokemon_name,))
     rows = cursor.fetchall()
