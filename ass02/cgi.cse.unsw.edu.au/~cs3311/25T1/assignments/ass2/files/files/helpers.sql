@@ -318,7 +318,7 @@ CREATE OR REPLACE FUNCTION findEvlnInfo(_id _Pokemon_ID)
         result evlnInfo;
     BEGIN
         FOR tuple IN
-            SELECT
+            SELECT DISTINCT
                 P.name,
                 E.pre_evolution AS pkmon_id,
                 E.post_evolution AS post_ev_id
@@ -337,7 +337,7 @@ CREATE OR REPLACE FUNCTION findEvlnInfo(_id _Pokemon_ID)
             RETURN NEXT info;
             IF tuple.post_ev_id IS NOT NULL THEN
                 FOR result IN
-                SELECT * FROM findEvlnInfo(tuple.post_ev_id)
+                    SELECT DISTINCT * FROM findEvlnInfo(tuple.post_ev_id)
                 LOOP
                     RETURN NEXT result;
                 END LOOP;
