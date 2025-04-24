@@ -391,7 +391,8 @@ CREATE OR REPLACE FUNCTION evolutionReq(evln_id integer)
         FROM
             Evolution_Requirements E
             JOIN Requirements R on R.id = E.requirement
-        WHERE evolution = evln_id;
+        WHERE evolution = evln_id
+        ORDER BY E.requirement;
     END;
 $$ LANGUAGE plpgsql;
 
