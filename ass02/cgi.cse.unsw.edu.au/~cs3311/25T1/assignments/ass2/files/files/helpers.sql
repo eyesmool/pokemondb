@@ -340,7 +340,8 @@ CREATE TYPE evlnInfo AS (
     pre_ev_id _Pokemon_ID,
     post_name text,
     post_ev_id _Pokemon_ID,
-    evln_id integer
+    evln_id integer,
+    depth integer
 );
 
 -- Function: findEvlnInfo(_id _Pokemon_ID)
@@ -374,6 +375,7 @@ CREATE OR REPLACE FUNCTION findEvlnInfo(_id _Pokemon_ID)
             info.post_name := pkmonIdToName(tuple.post_ev_id);
             info.post_ev_id := tuple.post_ev_id;
             info.evln_id := tuple.evln_id;
+            info.depth := evolutionDepth(tuple.name);
             RETURN NEXT info;
             IF tuple.post_ev_id IS NOT NULL THEN
                 FOR result IN
@@ -468,7 +470,7 @@ CREATE OR REPLACE VIEW Basic_Pokemon AS
 -- Function: getBasicPokemonEvlnInfo(assertion_match text)
 -- Returns rows from Basic_Pokemon_Evolution_Info where the assertion matches (case-insensitive substring)
 
-CREATE OR REPLACE FUNCTION getBasicPokemonEvlnInfo(assertion_match text)
+CREATE OR REPLACE FUNCTION filterReqs(assertion_match text)
     RETURNS TABLE (
         basic_pokemon text,
         evln_pre text,
@@ -494,8 +496,10 @@ CREATE OR REPLACE FUNCTION getBasicPokemonEvlnInfo(assertion_match text)
             LATERAL q4Helper(bp.name) AS q4helper
             JOIN Evolution_Requirements ER ON q4helper.evln_id = ER.evolution
             JOIN Requirements R ON ER.requirement = R.ID
-        WHERE checkAssertionsInEvolutionChain(bp.name, assertion_match);
-    END;
+        WHERE checkAssertionsInEvolutionChain(bp.name, assertion_match)
+            AND R.assertion ILIKE '%' || assertion_match || '%'
+        ORDER BY q4helper.evln_post;
+    END
 $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION checkAssertionsInEvolutionChain(basicPokemon text, assertion_match text)
@@ -514,16 +518,97 @@ CREATE OR REPLACE FUNCTION checkAssertionsInEvolutionChain(basicPokemon text, as
                 
         LOOP
             RAISE NOTICE '%', row_to_json(tuple);
-            -- IF E.pre_name ILIKE basicPokemon
-            -- ELSEIF (tuple.assertion NOT ILIKE '%' || assertion_match || '%' AND tuple.pre_name ILIKE basicPokemon) THEN
-            --     RETURN FALSE;
-            -- END IF;
+            -- a one step evolution
+            IF (isFinal(tuple.post_name) AND tuple.depth = 1) THEN
+                CONTINUE;
+            -- a step in the evolution chain does not have the assertion_match
+            ELSIF (tuple.assertion NOT ILIKE '%' || assertion_match || '%') THEN
+                RETURN FALSE;
+            END IF;
         END LOOP;
         RETURN TRUE;
     END;
 $$ LANGUAGE plpgsql;
 
 
+CREATE OR REPLACE FUNCTION evolutionDepth(pokemonName text)
+    RETURNS integer
+    AS $$
+    DECLARE
+        leafId _Pokemon_ID := pkmonNameToId(pokemonName);
+        prevId _Pokemon_ID;
+    BEGIN
+        -- Check if _id has any previous evolutions
+        SELECT (E.pre_evolution).Pokedex_Number, (E.pre_evolution).Variation_Number
+        INTO prevId
+        FROM Evolutions E
+        WHERE E.post_evolution = leafId;
+        IF prevId IS NULL THEN
+            -- No previous evolutions, this is the root/base
+            RETURN 1;
+        ELSE
+            -- Recurse on the previous evolution
+            RETURN 1 + evolutionDepth(pkmonIdToName(prevId));
+        END IF;
+    END
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION isFinal(pokemonName text)
+    RETURNS boolean
+    AS $$
+    DECLARE
+        _id _Pokemon_ID:= pkmonNameToId(pokemonName);
+        result record;
+    BEGIN
+        SELECT p.*
+        INTO result
+        FROM Pokemon p
+        WHERE _id NOT IN (SELECT e.Pre_Evolution FROM Evolutions e);
+
+        IF NOT FOUND THEN
+            RAISE NOTICE 'Hanzo';
+            RETURN FALSE;
+        ELSE
+            RETURN TRUE;
+        END IF;
+    END
+$$ LANGUAGE plpgsql;
+
+-- assumes both pkmon are in same evolution chain
+-- pkmon 2 is post and pkmon 1 is pre
+CREATE OR REPLACE FUNCTION depthDiff(pkmon1 text, pkmon2 text)
+    RETURNS integer
+    AS $$
+    BEGIN
+        RETURN evolutionDepth(pkmon2) - evolutionDepth(pkmon1);
+    END
+$$ LANGUAGE plpgsql;
 
 
-
+CREATE OR REPLACE FUNCTION checkTypesInEvolutionChain(basicPokemon text, pkmon_type text)
+    RETURNS boolean
+    AS $$
+    DECLARE
+        tuple RECORD;
+    BEGIN
+        FOR tuple IN 
+            SELECT 
+                E.*,
+                ER.*
+            FROM 
+                findEvlnInfo(pkmonNameToId(basicPokemon)) E,
+                LATERAL evolutionReq(E.evln_id) ER
+                
+        LOOP
+            RAISE NOTICE '%', row_to_json(tuple);
+            -- a one step evolution
+            IF (isFinal(tuple.post_name) AND tuple.depth = 1) THEN
+                CONTINUE;
+            -- a step in the evolution chain does not have the assertion_match
+            ELSIF (tuple.assertion NOT ILIKE '%' || assertion_match || '%') THEN
+                RETURN FALSE;
+            END IF;
+        END LOOP;
+        RETURN TRUE;
+    END;
+$$ LANGUAGE plpgsql;

@@ -1,0 +1,21 @@
+          race          |         horses          
+------------------------+-------------------------
+ Australian Cup         | F3,F4,F4,M3,M3,M4,M4,S5
+ Brisbane Cup           | F3,F4,F4,F5,M3,M3,M3,S3
+ Carlyon Cup            | G2,G3,G3,M3,M4
+ Caulfield Cup          | M3,M3,M3,M4,M5
+ Doomben Cup            | F3,F3,F4,F5,M2,M3,M3,M4
+ Easter Cup             | F2,F3,F5,G2,M3,M4,M4,M4
+ Hawkesbury Gold Cup    | F3,F4,F4,G3,M4
+ JRA Cup                | F3,F5,G3,M3,S5
+ Kingsford-Smith Cup    | F4,F5,G3,M3,M4,S3
+ Liverpool City Cup     | F3,F4,F4,M4,M4,M4,M5,M5
+ Lord Mayor's Cup       | F3,G3,G5,M3,M3,M3
+ Melbourne Cup          | F4,F4,M3,M4,M4
+ Moonee Valley Gold Cup | F2,F4,F5,F5,M3,M4,M4
+ Moreton Cup            | F3,F4,G3,M3,M4
+ N E Manion Cup         | F3,F4,F4,F5,M3,M4
+ Summer Cup             | F3,F3,F4,G3,M4,M4,S5
+ Sydney Cup             | F2,G3,G3,G4,M3,M3,M4,M5
+ Tattersall's Cup       | F3,F3,F4,M4,M4,M4,M5
+(18 rows)

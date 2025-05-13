@@ -1,0 +1,13 @@
+             race              |         horses          
+-------------------------------+-------------------------
+ Caulfield Autumn Classic      | F3,F4,F4,M3,M3,M4,M4,M4
+ Caulfield Classic             | F3,F3,F4,G3,G4,M4,M4,S3
+ Champagne Classic             | F4,F5,G5,M3,M4,M5
+ Coolmore Classic              | F3,F3,F4,F5,G3,M4,M4
+ Dark Jewel Classic            | F3,F4,G2,G4,M3,M4,M4,M4
+ Fred Best Classic             | F2,G5,M4,M5,S3
+ Gunsynd Classic               | F3,G5,M2,M3,M4,M4
+ Moonee Valley Fillies Classic | F3,F3,F4,G3,M3,M4,M4
+ Myer Classic                  | G3,G3,G5,M3,M4,M4
+ VRC Sprint Classic            | F3,F4,F4,F4,G4,M4
+(10 rows)

@@ -1,0 +1,10 @@
+         race         |         horses          
+----------------------+-------------------------
+ Australian Guineas   | F2,F3,F4,G2,M3,M4
+ Caulfield Guineas    | F4,F5,G3,M3,M4
+ Hawkesbury Guineas   | F5,G3,G5,M3,M3,M5
+ Queensland Guineas   | F2,F3,F3,G3,G3,G3,M4
+ Randwick Guineas     | F3,F3,F3,M4,M5
+ Rosehill Guineas     | F4,F4,F5,G3,M3,M3,M4,M5
+ The Thousand Guineas | F2,F4,F4,G3,G3,M4,S5
+(7 rows)

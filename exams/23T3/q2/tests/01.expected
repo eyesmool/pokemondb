@@ -1,0 +1,27 @@
+               event                |    date    |       person       | time 
+------------------------------------+------------+--------------------+------
+ Sydney Marathon                    | 2020-04-02 | Anthony Orr        |  243
+ Really Long Walk, Eastern Suburbs  | 2020-07-07 | Gillian Hawila     |  202
+ Eastern Suburbs Coastal Walk       | 2020-07-19 | Akhil Pokorny      |   28
+ Really Long Walk, Northern Beaches | 2020-08-04 | James Moffat       |  201
+ Really Long Walk, Melbourne        | 2021-01-22 | Daniel Millett     |  203
+ Eastern Suburbs Coastal Walk       | 2021-03-17 | Atul Jones         |   30
+ Eastern Suburbs Coastal Walk       | 2021-03-17 | Balakumar Fang     |   30
+ Eastern Suburbs Coastal Walk       | 2021-03-17 | Jenjira Mills      |   30
+ Really Long Walk, Northern Beaches | 2021-06-20 | Nicole Ismail      |  202
+ Really Long Walk, Eastern Suburbs  | 2021-07-17 | Isabelle Rubic     |  204
+ Really Long Walk, Eastern Suburbs  | 2021-07-17 | Ryan Saadie        |  204
+ Sydney Marathon                    | 2021-08-26 | Natalie Thompson   |  244
+ Really Long Walk, Brisbane         | 2021-12-08 | Adam Balding       |  204
+ Really Long Walk, Brisbane         | 2021-12-08 | Eunice Lin         |  204
+ Really Long Walk, Brisbane         | 2021-12-08 | Hannah Mehta       |  204
+ Really Long Walk, Melbourne        | 2022-03-14 | Olivia Compton     |  202
+ Sydney Marathon                    | 2022-04-18 | James Do           |  247
+ Sydney Marathon                    | 2022-04-18 | Jesse Long         |  247
+ Sydney Marathon                    | 2022-04-18 | Lesa Hayes         |  247
+ Sydney Marathon                    | 2022-04-18 | Sean Liem          |  247
+ Eastern Suburbs Coastal Walk       | 2022-04-21 | Savanna Jayasuriya |   27
+ Really Long Walk, Northern Beaches | 2022-05-13 | Emma Wong          |  202
+ Really Long Walk, Eastern Suburbs  | 2022-11-18 | Shamis Buchhorn    |  200
+ Really Long Walk, Brisbane         | 2022-11-28 | Eden Nomchong      |  203
+(24 rows)
