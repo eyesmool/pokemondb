@@ -19,13 +19,57 @@ if len(sys.argv) < 3:
 track = sys.argv[1]
 date = sys.argv[2]
 
-validDate = re.compile("^\d{4}-\d{2}-\d{2}$")
+validDate = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 if not validDate.match(date):
    print(f"Invalid date")
    exit(1)
 
 try:
    # ... python code goes here ...
+   conn = psycopg2.connect("dbname=racing")
+   cur = conn.cursor()
+   cur.execute(
+      '''select 
+            r.name
+         from racecourses r
+         where r.name LIKE %s;
+      ''', [track,]
+   )
+   while True:
+      tuple = cur.fetchone()
+      if tuple is None:
+         print('No such racecourse')
+         sys.exit()
+      else:
+         break
+   
+   cur.execute(
+      '''select 
+            r.name,
+            m.run_on
+         from racecourses r
+         join meetings m on (m.run_at = r.id)
+         where r.name LIKE %s and %s = m.run_on;
+      ''', [track, date,]
+   )
+   while True:
+      tuple = cur.fetchone()
+      if tuple is None:
+         print('No such meeting')
+         sys.exit()
+      else:
+         break
+   query = '''select * from raceCourseDate(%s, %s)'''
+   cur.execute(query,[track, date,])
+   print(f"Race meeting at {track} on {date}")
+   prevRace = ''
+   for tup in cur.fetchall():
+      race_course, race_date, meeting_id, race_name, prize, race_length,position,horse_name,jockey_name,winnings = tup
+      if prevRace != race_name:
+         print(f"\n{race_name}, prize pool ${prize}, run over {race_length}m")
+      print(f"{horse_name} ridden by {jockey_name} wins ${winnings}")
+      prevRace = race_name
+
 
 except psycopg2.Error as err:
    print("DB error: ", err)
