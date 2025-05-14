@@ -26,7 +26,7 @@ ptype = sys.argv[1]
 if not ptype in types:
   print(usage)
   exit(1)
-digits = re.compile("^\d+$")
+digits = re.compile(r"^\d+$")
 for arg in sys.argv[2:5]:
   if not digits.match(arg):
     print(usage)
@@ -40,8 +40,32 @@ ncars = int(sys.argv[5])
 # manipulate database
 
 try:
+  conn = psycopg2.connect("dbname=property")
+  cur = conn.cursor()
+  query = '''select * from properties(%s, %s)'''
+  cur.execute(query, [ptype, maxPrice,])
+  for tup in cur.fetchall():
+    property_id, price, cars_beds_baths, address = tup
+    bbc = list(map(int,cars_beds_baths.split(',')))
+    if len(bbc) == 2:
+      bbc.append(0)
+    pbeds = bbc[0]
+    pbaths = bbc[1]
+    pcars = bbc[2]
+    array = [nbeds, nbaths, ncars]
+    # print(bbc, array)
+    matchProperty = True
+    for x in range(3):
+      # print(x)
+      if array[x] == 0:
+        continue
+      elif bbc[x] != array[x]:
+        matchProperty = False
+        break
+    if matchProperty:
+      print(f"#{property_id}: {address}, {pbeds}br, {pbaths}ba, {pcars}car, ${price}")
+    
 
-  ... your Python code goes here ...
 
 except Exception as err:
   print("DB error: ", err)

@@ -52,7 +52,6 @@ begin
 				);
 		end if;
 	end loop;
-	raise notice 'hanzo';
 	error := 'No such property';
 	return error;
 end;
