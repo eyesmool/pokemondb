@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 # COMP3311 20T2 Final Exam
 # Q7: tracklist for album, given by Albums.id
 #     show performers/instruments for each track
@@ -24,8 +24,32 @@ if not albumID.isnumeric():
 
 try:
    db = psycopg2.connect("dbname=music")
+   cur = db.cursor()
+   query = '''
+   select * from findAlbum(%s)
+   '''
+   cur.execute(query,[albumID,])
+   title, year, genre = cur.fetchone()
+   if title is None:
+      print('Invalid album ID')
+      sys.exit()
+   query = '''
+   select * from album(%s)
+   '''
+   cur.execute(query, [albumID,])
+   print(f"{title} ({year}) ({genre})")
+   print("========================================")
+   prevSong = ''
+   for tup in cur.fetchall():
+      album_id, album_title, song_id, song_trackNo, song_title, performer_id, performer_nam, instruments = tup
+      if (prevSong != song_id):
+         print(f"{song_trackNo:2d}. {song_title}")
+      if instruments is None:
+         print(f"{' ':8}The whole group")
+      else:
+         print(f"{' ':8}{performer_nam}: {instruments}")
+      prevSong = song_id
 
-   # ... your code goes here ...
 
 except psycopg2.Error as err:
    print("DB error: ", err)
