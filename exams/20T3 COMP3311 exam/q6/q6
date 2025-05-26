@@ -1,9 +1,11 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 # COMP3311 20T2 Final Exam
 # Q6: discography for one group, given by Groups.id
 
+
 import sys
 import psycopg2
+import math
 
 # ... put helper functions here ...
 
@@ -23,9 +25,29 @@ if not groupID.isnumeric():
 
 try:
    db = psycopg2.connect("dbname=music")
-
-   # ... your code goes here ...
-
+   cur = db.cursor()
+   query = '''
+   select * from groupName(%s)
+   '''
+   cur.execute(query, [groupID,])
+   groupName, = cur.fetchone()
+   if groupName is None:
+      print('Invalid group ID')
+      sys.exit()
+   query = '''
+   select * from discography(%s);
+   '''
+   cur.execute(query, [groupID,])
+   print(f"Discography for {groupName}")
+   prevAlbum = ''
+   for tup in cur.fetchall():
+      group_id, group_name, album_id, album_title, album_year, album_genre, song_id, song_trackNo, song_title, song_length, = tup
+      if prevAlbum != album_title:
+         print("--------------------")
+         print(f'{album_title} ({album_year}) ({album_genre})')
+         print("--------------------")
+      print(f"{song_trackNo:2d}. {song_title} ({math.floor(song_length / 60)}:{song_length % 60:02d})")
+      prevAlbum = album_title
 except psycopg2.Error as err:
    print("DB error: ", err)
 finally:
