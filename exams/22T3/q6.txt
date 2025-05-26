@@ -3,8 +3,71 @@
 
 (A) ER-mapping of subclasses
 
+create table A (
+  id integer primary key,
+  x text
+);
 
+create table B (
+  id primary key references  A(id) not null,
+  y text
+);
+
+create table C (
+  id primary key references  A(id) not null,
+);
+
+create table Cz (
+  id primary key references  C(id) not null,
+  z text,
+  primary key (c,z)
+);
+
+create table R (
+  c references C(id),
+  d references D(id),
+  primary key (c,d)
+);
+
+create table D (
+  id primary key,
+  w text 
+)
 
 (B) Single-table-mapping of subclasses
+
+create table A (
+  id integer primary key not null,
+  x text, 
+  y text,
+  is_b boolean, 
+  is_c boolean,
+  -- ensure total participaton 
+  constraint subclasses check (b or c)
+);
+
+create table Z (
+  a integer references A(id),
+  z text,
+   primary key (a, z)
+);
+
+create table D (
+  id integer primary key,
+  w text
+)
+
+create table R (
+  a integer references A(id),
+  d integer references D(id),
+  primary key (a, d)
+)
+
+-- note: while this schema facilitates easily listing all B's and C's, it
+-- would potentially cause conflicts if a tuple in Z or R refers to a tuple
+-- in A (implying that tuple should belong to the C subclass) which has c = false
+-- this can be mitigated by removing the b and c properties, but this would make
+-- listing B's and C's impossible, and would make it impossible to ensure total
+-- participation of all A's in a subclass.
 
 

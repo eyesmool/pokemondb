@@ -1,0 +1,51 @@
+(a) ER mapping
+
+create table R (
+  id  integer primary key,
+  x   text
+);
+
+create table A (
+  R_id    integer primary key,
+  y       integer not null,
+  foreign key (R_id) references R(id) 
+);
+
+create table B (
+  R_id    integer primary key,
+  foreign key (R_id) references R(id) 
+);
+
+create table C (
+  R_id    integer primary key,
+  foreign key (R_id) references R(id) 
+);
+
+create table Cz (
+  C       integer references C(R_id)
+  z integer not null
+)
+
+-- cannot enforce disjoint subclasses
+-- cannot restrict R to one subclass
+-- cannot enforce total participation
+
+(b) Single-table mapping
+
+create table R (
+  id      integer primary key,
+  R_type  char(1) not null  
+                  check (rtype in ('A', 'B', 'C'))
+  x       text,
+  y       integer,
+  constraint subclasses check
+          ((rtype = 'R' and y is null and z is null)
+          or
+          (rtype = 'A' and x is null and z is null)
+          or 
+          (rtype = 'B' and x is null and y is null and z is null)
+          or 
+          (rtype = 'C' and x is null and y is null)
+          )
+          (rtype = 'Cz' and x is null and y is null)
+);

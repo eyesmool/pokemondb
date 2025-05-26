@@ -3,7 +3,41 @@
 
 create function txChecker() returns trigger
 as $$
--- Replace this line by your trigger function definition
+begin
+  perform * from accounts where id = sourceacct;
+  if not found then;
+    raise exception 'Source account not found
+  end if;
+
+  perform * from accounts where id = destacct;
+  if not found then;
+    raise exception 'Destacct account not found
+  end if;
+
+  perform * from accounts a 
+    join held_by h on (a.id = h.account)
+    join customers c on (h.customer = c.id)
+    where id = c.id and sourceacct = a.id;
+
+  if not found then;
+    raise exception 'Sourceacct not owned by owner'
+  end if;
+
+   perform * from accounts a 
+    join held_by h on (a.id = h.account)
+    join customers c on (h.customer = c.id)
+    where id = c.id and destacct = a.id;
+
+  if not found then;
+    raise exception 'Destacct not owned by owner'
+  end if;
+
+  if TxType = 'withdrawal' or TxType = 'transfer' then
+    perform * from accounts a where a.id = sourceacct and a.balance > amount
+    if not found then
+      raise exception 'Insufficient funds'
+    end if;
+  end if;
 $$ plpgsql;
 
 create function txUpdater() returns trigger

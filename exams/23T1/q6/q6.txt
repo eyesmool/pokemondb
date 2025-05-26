@@ -5,7 +5,72 @@
 
 ### Replace this line by your SQL schema ###
 
+create table People (
+  id integer primary key,
+  name text not null,
+  lives_in text not null
+);
+
+create table Customers (
+  pid integer primary key references People(id),
+);
+
+create table held_by (
+  customer integer references Customers(id),
+  account integer references Accounts(id),
+  primary key (customer, account)
+)
+
+create table Employees (
+  eid integer primary key references People(id),
+  salary integer not null check (salary > 0),
+  works_in integer not null references Branches(id)
+  
+)
+
+
+---- Things which this schema can not implement:
+-- total subclass participation of People, as it is split over multiple tables
+-- total total participation of customers and accounts in Held_by relationship, as it is split over multiple tables
+-- while we can enforce that all employees work in a branch, we can not enforce total participation of branches
+   (i.e. the fact that every branch must have at leats 1 employee work_in)
+
 
 (b) Single-table mapping
 
-### Replace this line by your SQL schema ###
+create table People (
+  id integer primary key,
+  name text not null,
+  lives_in text not null,
+  salary integer,
+
+  is_customer boolean not null,
+  is_employee boolean not null,
+
+  salary integer,
+  works_in integer references branches(id)
+
+  constraint employee_data check(
+    -- non-employees cannot have salary and work in branch
+    (is_employee = false and salary is null and works_in is null)
+    -- employees must have positive salary and work in branch
+    (is_employee = true and salary > 0 and works_in is not null)
+  )
+
+  constraint total_participation_check (
+    is_customer = true or is_employee = true
+  )
+);
+
+create table held_by (
+  customer integer references People(id),
+  account integer references Accounts(id),
+  primary key (customer, account)
+)
+
+-- Things which this schema cannot implement:
+-- total participation of customers and accounts in Held_by relationship,
+   as it is split over multiple tables
+-- fact that only customers can have a Held_by relationship,
+   as it is split over multiple tables
+   (i.e. we can not stop non-customer people from holding an account)
