@@ -3,12 +3,13 @@
 
 -- ... helper views (if any) go here ...
 
--- create or replace view q3(performer,ninstruments)
--- as
--- ...put your SQL here...
--- ;
+drop view if exists distinctInstruments cascade;
+drop view if exists nDistinctInstruments cascade;
+drop view if exists performerInstruments cascade;
 
-create or replace view distinctInstruments(ninstruments)
+
+
+create or replace view distinctInstruments(ninstruments) 
 as
 select 
   distinct(case 
@@ -29,7 +30,38 @@ from
   distinctInstruments d
 ;
 
+create or replace view performerInstruments 
+as
+select distinct
+  p.id,
+  p.name,
+  (case
+    when po.instrument LIKE '%guitar%' then 'guitar'
+    else po.instrument
+  end)
+from
+  performers p
+  join playson po on (po.performer = p.id)
+where po.instrument not LIKE 'vocals'
+;
 
+create or replace view q3Helper 
+as
+select distinct
+  p.id,
+  p.name,
+  count(p.instrument)
+from 
+  performerInstruments p
+group by p.id, p.name
+having count(p.instrument) > (select n from nDistinctInstruments) / 2
+order by p.id;
+
+create or replace view q3(performer,ninstruments)
+as
+select q.name, q.count
+from q3Helper q
+;
 
 
 
